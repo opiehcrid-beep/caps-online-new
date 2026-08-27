@@ -1,0 +1,983 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CAPS Online — HCR.ID</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gabarito:wght@600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary:#096cbf;--primary-tint:#e7f1fb;--primary-tint-2:#cfe3f6;--primary-600:#0861ab;
+    --accent:#f59300;--accent-600:#e08308;--accent-tint:#fff2dc;
+    --dark:#10243a;--ink:#141a22;--ink-2:#4d5868;--ink-3:#7e8aa0;
+    --border:#e3e8ef;--surface:#fff;--surface-2:#f6f8fb;
+    --success:#1f9d57;--success-tint:#e6f5ec;--danger:#c42b21;--danger-tint:#fbe9e7;--warning:#c47d10;--warning-tint:#faeed4;--slate:#64748b;--slate-tint:#eef1f5;
+    --font-d:"Gabarito",sans-serif;--font-u:"Hanken Grotesk",sans-serif;--font-n:"JetBrains Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:var(--font-u);color:var(--ink);background:var(--surface-2);font-size:14px;line-height:1.5}
+  .brandbar{position:fixed;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--primary) 0 70%,var(--accent));z-index:20}
+  .hide{display:none !important}
+  button{font-family:inherit;cursor:pointer;border:none}
+  input,select,textarea{font-family:inherit}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border-radius:9px;padding:10px 16px;font-weight:600;font-size:13.5px;border:1px solid transparent;transition:all .15s}
+  .btn-primary{background:var(--primary);color:#fff}
+  .btn-primary:hover{background:var(--primary-600)}
+  .btn-primary:disabled{opacity:.5;cursor:not-allowed}
+  .btn-accent{background:var(--accent);color:#fff}
+  .btn-accent:hover{background:var(--accent-600)}
+  .btn-ghost{background:#fff;color:var(--ink);border-color:#d0d8e3}
+  .btn-ghost:hover{background:var(--surface-2)}
+  .btn-quiet{background:transparent;color:var(--ink-2)}
+  .btn-quiet:hover{background:var(--surface-2)}
+  .btn.sm{padding:6px 11px;font-size:12px}
+  .btn.block{width:100%}
+  .logo{font-family:var(--font-d);font-weight:800;letter-spacing:-1px;color:var(--primary)}
+  .logo .dot{color:var(--accent)}
+  .subt{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3)}
+  h1.page{font-family:var(--font-d);font-size:26px;font-weight:800;letter-spacing:-1px;margin:6px 0 4px}
+  .card{background:#fff;border:1px solid var(--border);border-radius:11px;padding:16px;box-shadow:0 1px 3px rgba(16,36,58,.06)}
+  .field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+  .field label{font-size:12px;font-weight:600;color:var(--ink-2)}
+  .inp{border:1px solid var(--border);border-radius:9px;padding:10px 12px;font-size:14px;outline:none;width:100%}
+  .inp:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-tint)}
+  .alert{border:1px solid;border-radius:11px;padding:12px 14px;font-size:13px;margin-bottom:16px}
+  .al-dng{background:var(--danger-tint);border-color:#eec6c1;color:#8f201a}
+  .al-info{background:var(--primary-tint);border-color:var(--primary-tint-2);color:#075293}
+  .al-ok{background:var(--success-tint);border-color:#bce6cd;color:#176b3d}
+  .al-warn{background:var(--warning-tint);border-color:#ecd9a8;color:#8a5808}
+  .spin{width:14px;height:14px;border:2px solid rgba(255,255,255,.45);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;display:inline-block}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .badge{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;border-radius:999px;padding:3px 10px;border:1px solid}
+  .badge .d{width:6px;height:6px;border-radius:50%;background:currentColor}
+  .b-ok{color:var(--success);background:var(--success-tint);border-color:#bce6cd}
+  .b-warn{color:var(--warning);background:var(--warning-tint);border-color:#ecd9a8}
+  .b-frz{color:var(--slate);background:var(--slate-tint);border-color:#d8dee7}
+  .b-info{color:var(--primary);background:var(--primary-tint);border-color:var(--primary-tint-2)}
+  .b-acc{color:#cf7406;background:var(--accent-tint);border-color:#f3d59f}
+  .chip{font-size:12px;font-weight:600;color:#dbe7f4;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);border-radius:999px;padding:5px 13px}
+
+  /* ---- layar login (dipakai peserta MAUPUN admin) ---- */
+  #layarLogin{display:grid;grid-template-columns:1.1fr 1fr;min-height:100vh}
+  .brandPanel{background:linear-gradient(160deg,var(--dark) 0%,#0c1c30 60%,var(--primary-600) 140%);color:#fff;padding:48px 44px;display:flex;flex-direction:column;justify-content:space-between}
+  .brandPanel h1{font-family:var(--font-d);font-size:32px;font-weight:800;letter-spacing:-1px;line-height:1.1;margin:32px 0 0}
+  .brandPanel p{color:#c3d3e6;font-size:14px;line-height:1.6;max-width:380px}
+  .chipRow{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+  .formPanel{display:flex;align-items:center;justify-content:center;padding:40px 28px;background:var(--surface)}
+  .formBox{width:100%;max-width:360px}
+
+  /* ---- peserta: landing / kuis / selesai ---- */
+  .page{min-height:100vh;display:flex;flex-direction:column}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 26px;background:var(--surface);border-bottom:1px solid var(--border)}
+  .body{flex:1;display:flex;justify-content:center;padding:44px 24px}
+  .bodyInner{max-width:620px;width:100%}
+  .progWrap{padding:0 26px 12px;background:var(--surface)}
+  .bar{height:8px;background:#eceff4;border-radius:999px;overflow:hidden}
+  .barFill{height:100%;background:var(--primary);border-radius:999px;transition:width .2s}
+  .opsi{display:flex;gap:13px;align-items:flex-start;text-align:left;border:1.5px solid var(--border);background:#fff;border-radius:11px;padding:15px 17px;width:100%;margin-bottom:11px}
+  .opsi.active{border-color:var(--primary);background:var(--primary-tint)}
+  .opsiLabel{flex:none;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-family:var(--font-n);font-weight:700;font-size:14px;background:var(--surface-2);color:var(--ink-3)}
+  .opsi.active .opsiLabel{background:var(--primary);color:#fff}
+  .opsiText{font-size:14.5px;line-height:1.55;padding-top:3px}
+  .dots{display:flex;flex-wrap:wrap;gap:6px;margin-top:26px;justify-content:center}
+  .dot{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:#fff;color:var(--ink-3);font-family:var(--font-n);font-size:12px;display:grid;place-items:center}
+  .dot.done{background:var(--primary-tint);color:var(--primary);border-color:var(--primary-tint-2);font-weight:700}
+  .dot.here{background:var(--primary);color:#fff;border-color:var(--primary);font-weight:700}
+
+  /* ---- admin: shell ---- */
+  #shellAdmin{display:flex;min-height:100vh}
+  .side{width:220px;flex:none;height:100vh;position:sticky;top:0;border-right:1px solid var(--border);background:#fff;padding:20px 14px;display:flex;flex-direction:column}
+  .navBtn{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:8px;font-size:13px;font-weight:500;color:var(--ink-2);width:100%;text-align:left;background:transparent;margin-bottom:2px}
+  .navBtn.on{background:var(--primary-tint);color:var(--primary);font-weight:600}
+  .main{flex:1;min-width:0;padding:30px 36px 80px}
+  .tabPane{display:none}
+  .tabPane.on{display:block}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{text-align:left;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-3);padding:10px 12px;border-bottom:1px solid var(--border)}
+  td{padding:11px 12px;border-bottom:1px solid var(--border);color:var(--ink-2)}
+  .kpiGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:24px}
+  .kpi{background:#fff;border:1px solid var(--border);border-radius:11px;padding:14px;position:relative;overflow:hidden}
+  .kpi::after{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--primary)}
+  .kpi .kl{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--ink-3)}
+  .kpi .kv{font-family:var(--font-n);font-size:24px;font-weight:600;margin-top:4px}
+  .modalBg{position:fixed;inset:0;background:rgba(16,36,58,.45);z-index:1000;display:flex;align-items:flex-start;justify-content:center;padding:50px 16px;overflow-y:auto}
+  .modalBox{background:#fff;border-radius:14px;width:100%;max-width:560px;box-shadow:0 28px 64px -18px rgba(16,36,58,.26)}
+  .modalHead{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border)}
+  .modalBody{padding:20px}
+  .tabx{border:none;background:transparent;color:var(--ink-3);font-weight:600;font-size:12.5px;padding:7px 12px;border-radius:8px;cursor:pointer}
+  .tabx.on{background:var(--surface-2);color:var(--primary)}
+</style>
+</head>
+<body>
+<div class="brandbar"></div>
+
+<!-- ================= LOGIN (satu pintu untuk peserta & admin) ================= -->
+<main id="layarLogin">
+  <section class="brandPanel">
+    <div>
+      <div class="logo" style="font-size:28px">HCR<span class="dot">.</span>ID</div>
+      <h1>C.A.P.S.<br>Personal Style Inventory</h1>
+      <p>Asesmen gaya komunikasi untuk memahami cara Anda berinteraksi, mengambil keputusan, dan bekerja bersama tim.</p>
+      <div class="chipRow">
+        <span class="chip">Controller</span><span class="chip">Promotor</span>
+        <span class="chip">Analyzer</span><span class="chip">Supporter</span>
+      </div>
+    </div>
+    <p style="color:#8ba3bf;font-size:12px;margin:0">HCR.ID · Developing Corporate Future Leader</p>
+  </section>
+  <section class="formPanel">
+    <div class="formBox">
+      <span class="subt">Masuk</span>
+      <h2 style="font-family:var(--font-d);font-size:24px;font-weight:800;margin:8px 0 4px;letter-spacing:-.6px">Mulai asesmen Anda</h2>
+      <p style="color:var(--ink-3);font-size:13px;margin:0 0 22px">Peserta: pakai username dari fasilitator. Admin/fasilitator: pakai email.</p>
+      <div id="loginError" class="alert al-dng hide"></div>
+      <div class="field"><label>Username (peserta) atau email (admin)</label><input id="inUsername" class="inp" placeholder="mis. budi-01 atau admin@hcr.id"></div>
+      <div class="field"><label>Password</label><input id="inPassword" class="inp" type="password" placeholder="••••••••"></div>
+      <button id="btnLogin" class="btn btn-primary block">Masuk</button>
+    </div>
+  </section>
+</main>
+
+<!-- ============================================================
+     AREA PESERTA
+     ============================================================ -->
+<div id="areaPeserta" class="hide">
+  <main id="layarLanding" class="page hide">
+    <div class="topbar">
+      <div class="logo" style="font-size:22px">HCR<span class="dot">.</span>ID</div>
+      <button id="btnKeluar1" class="btn btn-quiet sm">Keluar</button>
+    </div>
+    <div class="body"><div class="bodyInner">
+      <span class="subt" id="sapaan">Halo</span>
+      <h1 style="font-family:var(--font-d);font-size:28px;font-weight:800;margin:8px 0 8px;letter-spacing:-1px">Selamat datang di asesmen CAPS</h1>
+      <p style="color:var(--ink-3);font-size:14.5px;line-height:1.6;margin:0 0 22px">
+        Anda akan menjawab 18 pasang pernyataan. Pilih satu pernyataan yang paling menggambarkan diri Anda pada tiap nomor. Jawab secara spontan dan jujur.
+      </p>
+      <div id="batchCard" class="card hide" style="margin-bottom:20px"></div>
+      <div id="landingAksi"></div>
+    </div></div>
+  </main>
+
+  <main id="layarKuis" class="page hide">
+    <div class="topbar">
+      <div class="logo" style="font-size:20px">HCR<span class="dot">.</span>ID</div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span id="hitungJawab" style="font-family:var(--font-n);font-size:12px;color:var(--ink-3)">0/18 terjawab</span>
+        <span id="indikatorSimpan" class="chip hide" style="color:var(--primary);background:var(--primary-tint);border-color:var(--primary-tint-2)">menyimpan</span>
+      </div>
+    </div>
+    <div class="progWrap"><div class="bar"><div id="barFill" class="barFill" style="width:0%"></div></div></div>
+    <div class="body"><div class="bodyInner">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <span class="subt" id="nomorSoal">Nomor 1 dari 18</span>
+        <div style="display:flex;gap:6px">
+          <button id="btnPrev" class="btn btn-quiet sm">Sebelumnya</button>
+          <button id="btnNext" class="btn btn-quiet sm">Berikutnya</button>
+        </div>
+      </div>
+      <h2 style="font-family:var(--font-d);font-size:19px;font-weight:700;letter-spacing:-.3px">Pilih pernyataan yang paling menggambarkan diri Anda</h2>
+      <div style="margin-top:20px">
+        <button id="opsiA" class="opsi"><span class="opsiLabel">A</span><span id="teksA" class="opsiText"></span></button>
+        <button id="opsiB" class="opsi"><span class="opsiLabel">B</span><span id="teksB" class="opsiText"></span></button>
+      </div>
+      <div id="kuisError" class="alert al-dng hide" style="margin-top:16px"></div>
+      <div id="dotsWrap" class="dots"></div>
+      <div style="margin-top:26px;display:flex;justify-content:flex-end">
+        <button id="btnKirim" class="btn btn-primary" disabled>Kirim jawaban</button>
+      </div>
+      <p id="hintLengkap" style="text-align:right;color:var(--ink-3);font-size:11.5px;margin-top:8px">Lengkapi seluruh 18 nomor untuk mengirim.</p>
+    </div></div>
+  </main>
+
+  <main id="layarSelesai" class="page hide">
+    <div class="topbar">
+      <div class="logo" style="font-size:22px">HCR<span class="dot">.</span>ID</div>
+      <button id="btnKeluar2" class="btn btn-quiet sm">Keluar</button>
+    </div>
+    <div class="body" style="align-items:center"><div class="bodyInner" style="text-align:center;max-width:480px">
+      <div style="width:64px;height:64px;margin:0 auto 24px;border-radius:50%;background:var(--success-tint);display:grid;place-items:center">
+        <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#1f9d57" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+      </div>
+      <h1 style="font-family:var(--font-d);font-size:26px;font-weight:800;letter-spacing:-.7px">Terima kasih, jawaban terkirim</h1>
+      <p style="color:var(--ink-3);font-size:14.5px;line-height:1.6;margin-top:10px">
+        Asesmen CAPS Anda sudah tersimpan lengkap. Hasil akan ditinjau dan dirilis oleh fasilitator. Anda dapat menutup halaman ini.
+      </p>
+    </div></div>
+  </main>
+</div>
+
+<!-- ============================================================
+     AREA ADMIN
+     ============================================================ -->
+<div id="areaAdmin" class="hide">
+  <div id="shellAdmin">
+    <aside class="side">
+      <div style="padding:4px 8px 18px">
+        <div class="logo" style="font-size:22px">HCR<span class="dot">.</span>ID</div>
+        <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-top:6px">Panel Fasilitator</div>
+      </div>
+      <button class="navBtn on" data-tab="tabDash">Dashboard</button>
+      <button class="navBtn" data-tab="tabSetup">Setup Awal</button>
+      <button class="navBtn" data-tab="tabBatch">Batch</button>
+      <button class="navBtn" data-tab="tabPeserta">Peserta</button>
+      <button class="navBtn" data-tab="tabHasil">Hasil & Laporan</button>
+      <div style="margin-top:auto;padding-top:16px;border-top:1px solid var(--border)">
+        <div id="namaAdmin" style="font-size:12.5px;font-weight:600;padding:0 4px 10px"></div>
+        <button id="btnKeluarAdmin" class="btn btn-quiet sm block">Keluar</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <section id="tabDash" class="tabPane on">
+        <span class="subt">Dashboard</span>
+        <h1 class="page">Ringkasan penyelenggaraan</h1>
+        <div class="kpiGrid">
+          <div class="kpi"><div class="kl">Total peserta</div><div class="kv" id="kpiPeserta">-</div></div>
+          <div class="kpi"><div class="kl">Total batch</div><div class="kv" id="kpiBatch">-</div></div>
+          <div class="kpi"><div class="kl">Asesmen selesai</div><div class="kv" id="kpiSelesai">-</div></div>
+        </div>
+        <p class="al-info alert">Gunakan menu di samping untuk mulai: Setup Awal (sekali saja) &rarr; Batch &rarr; Peserta &rarr; Hasil.</p>
+      </section>
+
+      <section id="tabSetup" class="tabPane">
+        <span class="subt">Setup Awal</span>
+        <h1 class="page">Tanam 18 soal CAPS</h1>
+        <p style="color:var(--ink-3);font-size:13.5px;max-width:560px">
+          Jalankan sekali saja setelah project Firebase pertama kali disiapkan. Ini menanam teks 18 soal
+          (koleksi <b>questions</b>, bisa dibaca peserta) dan kunci pemetaan skor
+          (koleksi <b>answerKey</b>, hanya bisa dibaca admin).
+        </p>
+        <div id="setupMsg"></div>
+        <button id="btnSeed" class="btn btn-accent">Tanam 18 Soal</button>
+      </section>
+
+      <section id="tabBatch" class="tabPane">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div><span class="subt">Batch</span><h1 class="page">Kelola batch asesmen</h1></div>
+          <button id="btnBukaBatch" class="btn btn-primary">+ Buat batch</button>
+        </div>
+        <div class="card" style="padding:0;overflow:auto">
+          <table><thead><tr><th>Nama</th><th>Dibuka</th><th>Ditutup</th><th>Status</th><th></th></tr></thead>
+          <tbody id="tblBatch"></tbody></table>
+        </div>
+      </section>
+
+      <section id="tabPeserta" class="tabPane">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div><span class="subt">Peserta</span><h1 class="page">Kelola akun peserta</h1></div>
+          <button id="btnBukaPeserta" class="btn btn-primary">+ Tambah peserta</button>
+        </div>
+        <div class="card" style="padding:0;overflow:auto">
+          <table><thead><tr><th>Nama</th><th>Batch</th><th>Status</th></tr></thead>
+          <tbody id="tblPeserta"></tbody></table>
+        </div>
+      </section>
+
+      <section id="tabHasil" class="tabPane">
+        <span class="subt">Hasil & Laporan</span>
+        <h1 class="page">Hasil asesmen</h1>
+        <div class="field" style="max-width:320px"><label>Pilih batch</label>
+          <select id="selBatchHasil" class="inp"></select></div>
+        <div class="card" style="padding:0;overflow:auto">
+          <table><thead><tr><th>Nama</th><th>Jawaban</th><th>Tipe</th><th>Laporan</th><th></th></tr></thead>
+          <tbody id="tblHasil"></tbody></table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- MODAL BATCH -->
+  <div id="modalBatch" class="modalBg hide">
+    <div class="modalBox">
+      <div class="modalHead"><h3 style="font-size:16px">Buat batch baru</h3><button class="btn btn-quiet sm" data-close>&times;</button></div>
+      <div class="modalBody">
+        <div id="batchModalMsg"></div>
+        <div class="field"><label>Nama batch</label><input id="bNama" class="inp" placeholder="Leadership Batch 1 - 2026"></div>
+        <div class="field"><label>Deskripsi (opsional)</label><input id="bDeskripsi" class="inp"></div>
+        <div style="display:flex;gap:12px">
+          <div class="field" style="flex:1"><label>Waktu mulai</label><input id="bMulai" class="inp" type="datetime-local"></div>
+          <div class="field" style="flex:1"><label>Waktu selesai</label><input id="bSelesai" class="inp" type="datetime-local"></div>
+        </div>
+        <label style="display:flex;gap:8px;align-items:center;font-size:13px;margin-bottom:16px">
+          <input id="bAktif" type="checkbox" checked style="width:16px;height:16px"> Aktifkan batch sekarang
+        </label>
+        <div style="display:flex;justify-content:flex-end;gap:8px">
+          <button class="btn btn-ghost" data-close>Batal</button>
+          <button id="btnSimpanBatch" class="btn btn-primary">Simpan batch</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PESERTA -->
+  <div id="modalPeserta" class="modalBg hide">
+    <div class="modalBox">
+      <div class="modalHead"><h3 style="font-size:16px">Tambah peserta</h3><button class="btn btn-quiet sm" data-close>&times;</button></div>
+      <div class="modalBody">
+        <div style="margin-bottom:14px">
+          <button class="tabx on" data-ptab="individu">Satu per satu</button>
+          <button class="tabx" data-ptab="massal">Tempel massal</button>
+        </div>
+        <div id="pesertaModalMsg"></div>
+        <div class="field"><label>Tautkan ke batch</label><select id="pBatch" class="inp"></select></div>
+        <div id="paneIndividu">
+          <div class="field"><label>Nama lengkap</label><input id="pNama" class="inp"></div>
+          <div style="display:flex;gap:12px">
+            <div class="field" style="flex:1"><label>Username</label><input id="pUsername" class="inp" placeholder="budi-01"></div>
+            <div class="field" style="flex:1"><label>Password</label><input id="pPassword" class="inp" placeholder="min. 6 karakter"></div>
+          </div>
+        </div>
+        <div id="paneMassal" class="hide">
+          <div class="field"><label>Tempel daftar (Nama, username, password per baris)</label>
+            <textarea id="pMassal" class="inp" rows="6" style="font-family:var(--font-n);font-size:12px" placeholder="Budi Santoso, budi-01, rahasia123
+Siti Aminah, siti-02, rahasia456"></textarea>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:10px">
+          <button class="btn btn-ghost" data-close>Batal</button>
+          <button id="btnSimpanPeserta" class="btn btn-primary">Buat akun</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL GARIS BATAS -->
+  <div id="modalBatas" class="modalBg hide">
+    <div class="modalBox">
+      <div class="modalHead"><h3 style="font-size:16px">Tetapkan tipe (skor seri)</h3><button class="btn btn-quiet sm" data-close>&times;</button></div>
+      <div class="modalBody">
+        <p id="batasInfo" style="font-size:13.5px;color:var(--ink-2)"></p>
+        <div class="field"><label>Pilih tipe final</label><select id="selBatas" class="inp"></select></div>
+        <div style="display:flex;justify-content:flex-end;gap:8px">
+          <button class="btn btn-ghost" data-close>Batal</button>
+          <button id="btnSimpanBatas" class="btn btn-primary">Tetapkan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+/* ============================================================
+   KONFIGURASI FIREBASE — satu-satunya tempat yang perlu diisi.
+   Ambil dari Firebase Console > Project Settings > General > Your apps.
+   Nilai ini AMAN ditaruh langsung di kode (bukan rahasia); keamanan
+   sesungguhnya ditegakkan oleh Firestore Security Rules.
+   ============================================================ */
+const firebaseConfig = {
+  apiKey: "AIzaSyAHeQWYmDibkM8JoKcpJuMblav_D-UA2H4",
+  authDomain: "caps-online-d9a09.firebaseapp.com",
+  projectId: "caps-online-d9a09",
+  storageBucket: "caps-online-d9a09.firebasestorage.app",
+  messagingSenderId: "360180012796",
+  appId: "1:360180012796:web:71c808cf1a4b22764a6979"
+};
+const DOMAIN_PESERTA = "@peserta.caps.local";
+
+import { initializeApp, deleteApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+import {
+  getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+import {
+  getFirestore, doc, getDoc, setDoc, getDocs, addDoc, updateDoc, collection, query, where, Timestamp, writeBatch
+} from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const $ = (id) => document.getElementById(id);
+function tampilkan(id) {
+  ["layarLanding","layarKuis","layarSelesai"].forEach(x => $(x).classList.toggle("hide", x !== id));
+}
+
+/* ============================================================
+   LOGIN TUNGGAL
+   Kalau kolom pertama mengandung "@", dianggap email admin.
+   Kalau tidak, dianggap username peserta dan ditambah domain.
+   ============================================================ */
+$("btnLogin").onclick = async () => {
+  const isi = $("inUsername").value.trim();
+  const p = $("inPassword").value;
+  $("loginError").classList.add("hide");
+  if (!isi || !p) { errLogin("Isi username/email dan password terlebih dahulu."); return; }
+  const email = isi.includes("@") ? isi.toLowerCase() : isi.toLowerCase() + DOMAIN_PESERTA;
+  $("btnLogin").disabled = true; $("btnLogin").innerHTML = '<span class="spin"></span>';
+  try {
+    await signInWithEmailAndPassword(auth, email, p);
+  } catch (e) {
+    errLogin("Username/email atau password salah. Periksa kembali kredensial Anda.");
+    $("btnLogin").disabled = false; $("btnLogin").innerText = "Masuk";
+  }
+};
+function errLogin(msg) { $("loginError").innerText = msg; $("loginError").classList.remove("hide"); }
+$("btnKeluar1").onclick = () => signOut(auth);
+$("btnKeluar2").onclick = () => signOut(auth);
+$("btnKeluarAdmin").onclick = () => signOut(auth);
+
+/* ============================================================
+   ROUTER UTAMA — cabang berdasarkan peran setelah login
+   ============================================================ */
+onAuthStateChanged(auth, async (user) => {
+  $("btnLogin").disabled = false; $("btnLogin").innerText = "Masuk";
+  $("areaPeserta").classList.add("hide");
+  $("areaAdmin").classList.add("hide");
+  $("layarLogin").classList.add("hide");
+
+  if (!user) { $("layarLogin").classList.remove("hide"); return; }
+
+  const profSnap = await getDoc(doc(db, "profiles", user.uid));
+  if (!profSnap.exists()) {
+    errLogin("Akun tidak ditemukan. Hubungi fasilitator.");
+    $("layarLogin").classList.remove("hide");
+    await signOut(auth);
+    return;
+  }
+  const profil = profSnap.data();
+
+  if (profil.role === "admin") {
+    $("namaAdmin").innerText = profil.nama || "Admin";
+    $("areaAdmin").classList.remove("hide");
+    muatSemuaAdmin();
+  } else {
+    $("areaPeserta").classList.remove("hide");
+    routerPeserta(user, profil);
+  }
+});
+
+/* ============================================================
+   AREA PESERTA
+   ============================================================ */
+let profilSaya = null, batchSaya = null, soalList = [], jawabanSaya = {}, idxSekarang = 0;
+
+async function routerPeserta(user, profil) {
+  profilSaya = profil;
+  $("sapaan").innerText = "Halo, " + (profil.nama || "Peserta");
+
+  if (!profil.batchId) { renderLandingTanpaBatch(); tampilkan("layarLanding"); return; }
+
+  const batchSnap = await getDoc(doc(db, "batches", profil.batchId));
+  batchSaya = batchSnap.exists() ? batchSnap.data() : null;
+
+  const progSnap = await getDoc(doc(db, "participantProgress", user.uid));
+  const sudahSelesai = progSnap.exists() && progSnap.data().status === "selesai";
+
+  if (sudahSelesai) { tampilkan("layarSelesai"); return; }
+
+  renderLanding(progSnap.exists() ? progSnap.data().jumlahJawab || 0 : 0);
+  tampilkan("layarLanding");
+}
+
+function fmtWaktu(ts) {
+  if (!ts) return "-";
+  const d = ts.toDate ? ts.toDate() : new Date(ts);
+  return d.toLocaleString("id-ID", { dateStyle: "full", timeStyle: "short" });
+}
+
+function renderLandingTanpaBatch() {
+  $("batchCard").classList.add("hide");
+  $("landingAksi").innerHTML = '<div class="alert al-warn">Anda belum ditautkan ke batch mana pun. Hubungi fasilitator penyelenggara.</div>';
+}
+
+function renderLanding(jumlahJawab) {
+  if (!batchSaya) { renderLandingTanpaBatch(); return; }
+  const now = new Date();
+  const mulai = batchSaya.waktuMulai.toDate();
+  const selesai = batchSaya.waktuSelesai.toDate();
+  const aktif = batchSaya.status === "aktif" && now >= mulai && now <= selesai;
+  const belumBuka = now < mulai;
+  const sudahTutup = (now > selesai) || batchSaya.status === "ditutup";
+
+  let badge = '<span class="chip" style="color:#1f9d57;background:var(--success-tint);border-color:#bce6cd">● Sedang dibuka</span>';
+  if (belumBuka) badge = '<span class="chip" style="color:var(--primary);background:var(--primary-tint);border-color:var(--primary-tint-2)">● Belum dibuka</span>';
+  if (sudahTutup) badge = '<span class="chip">● Ditutup</span>';
+
+  $("batchCard").classList.remove("hide");
+  $("batchCard").innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div>
+        <div style="font-family:var(--font-d);font-weight:700;font-size:16px">${batchSaya.nama}</div>
+        ${batchSaya.deskripsi ? `<div style="color:var(--ink-3);font-size:13px;margin-top:2px">${batchSaya.deskripsi}</div>` : ""}
+      </div>${badge}
+    </div>
+    <div style="height:1px;background:var(--border);margin:14px 0"></div>
+    <div style="display:flex;gap:24px;font-size:13px">
+      <div><span style="color:var(--ink-3)">Dibuka</span><br><span style="font-family:var(--font-n)">${fmtWaktu(batchSaya.waktuMulai)}</span></div>
+      <div><span style="color:var(--ink-3)">Ditutup</span><br><span style="font-family:var(--font-n)">${fmtWaktu(batchSaya.waktuSelesai)}</span></div>
+    </div>`;
+
+  if (aktif) {
+    $("landingAksi").innerHTML = `<button id="btnMulai" class="btn btn-accent">${jumlahJawab > 0 ? "Lanjutkan asesmen" : "Mulai asesmen"}</button>`;
+    $("btnMulai").onclick = mulaiKuis;
+  } else if (belumBuka) {
+    $("landingAksi").innerHTML = '<div class="alert al-info">Sesi belum dibuka. Silakan kembali pada waktu yang dijadwalkan.</div>';
+  } else {
+    $("landingAksi").innerHTML = '<div class="alert al-warn">Sesi telah ditutup. Hubungi fasilitator bila Anda belum sempat mengerjakan.</div>';
+  }
+}
+
+async function mulaiKuis() {
+  const qSnap = await getDocs(collection(db, "questions"));
+  soalList = [];
+  qSnap.forEach(d => soalList.push({ id: Number(d.id), ...d.data() }));
+  soalList.sort((a, b) => a.id - b.id);
+
+  const rSnap = await getDocs(query(collection(db, "responses"), where("pesertaId", "==", auth.currentUser.uid)));
+  jawabanSaya = {};
+  rSnap.forEach(d => { const x = d.data(); jawabanSaya[x.nomorSoal] = x.pilihan; });
+
+  idxSekarang = soalList.findIndex(s => !jawabanSaya[s.id]);
+  if (idxSekarang === -1) idxSekarang = 0;
+
+  renderSoal();
+  tampilkan("layarKuis");
+}
+
+function renderSoal() {
+  const s = soalList[idxSekarang];
+  $("nomorSoal").innerText = `Nomor ${s.id} dari ${soalList.length}`;
+  $("teksA").innerText = s.teksA;
+  $("teksB").innerText = s.teksB;
+  const pilihan = jawabanSaya[s.id];
+  $("opsiA").classList.toggle("active", pilihan === "A");
+  $("opsiB").classList.toggle("active", pilihan === "B");
+  $("btnPrev").disabled = idxSekarang === 0;
+  $("btnNext").disabled = idxSekarang === soalList.length - 1;
+  renderDots();
+  renderHitung();
+}
+
+function renderDots() {
+  $("dotsWrap").innerHTML = soalList.map((s, i) => {
+    const cls = i === idxSekarang ? "dot here" : (jawabanSaya[s.id] ? "dot done" : "dot");
+    return `<button class="${cls}" data-i="${i}">${s.id}</button>`;
+  }).join("");
+  [...$("dotsWrap").children].forEach(btn => btn.onclick = () => { idxSekarang = Number(btn.dataset.i); renderSoal(); });
+}
+
+function renderHitung() {
+  const terjawab = Object.keys(jawabanSaya).length;
+  $("hitungJawab").innerText = `${terjawab}/${soalList.length} terjawab`;
+  $("barFill").style.width = Math.round((terjawab / soalList.length) * 100) + "%";
+  const semua = terjawab === soalList.length;
+  $("btnKirim").disabled = !semua;
+  $("hintLengkap").classList.toggle("hide", semua);
+}
+
+$("btnPrev").onclick = () => { if (idxSekarang > 0) { idxSekarang--; renderSoal(); } };
+$("btnNext").onclick = () => { if (idxSekarang < soalList.length - 1) { idxSekarang++; renderSoal(); } };
+
+async function pilihJawaban(pilihan) {
+  const s = soalList[idxSekarang];
+  jawabanSaya[s.id] = pilihan;
+  renderSoal();
+
+  $("indikatorSimpan").classList.remove("hide");
+  const uid = auth.currentUser.uid;
+  await setDoc(doc(db, "responses", `${uid}_${s.id}`), {
+    pesertaId: uid, batchId: profilSaya.batchId, nomorSoal: s.id, pilihan,
+    updatedAt: Timestamp.now(),
+  });
+  await setDoc(doc(db, "participantProgress", uid), {
+    batchId: profilSaya.batchId, status: "sedang_mengerjakan",
+    jumlahJawab: Object.keys(jawabanSaya).length, updatedAt: Timestamp.now(),
+  }, { merge: true });
+  $("indikatorSimpan").classList.add("hide");
+
+  if (idxSekarang < soalList.length - 1) {
+    setTimeout(() => { idxSekarang++; renderSoal(); }, 180);
+  }
+}
+$("opsiA").onclick = () => pilihJawaban("A");
+$("opsiB").onclick = () => pilihJawaban("B");
+
+$("btnKirim").onclick = async () => {
+  const terjawab = Object.keys(jawabanSaya).length;
+  if (terjawab !== soalList.length) {
+    $("kuisError").innerText = "Masih ada nomor yang belum dijawab.";
+    $("kuisError").classList.remove("hide");
+    return;
+  }
+  $("btnKirim").disabled = true; $("btnKirim").innerHTML = '<span class="spin"></span>';
+  const uid = auth.currentUser.uid;
+  await setDoc(doc(db, "participantProgress", uid), {
+    batchId: profilSaya.batchId, status: "selesai",
+    jumlahJawab: soalList.length, updatedAt: Timestamp.now(),
+  }, { merge: true });
+  tampilkan("layarSelesai");
+};
+
+/* ============================================================
+   AREA ADMIN
+   ============================================================ */
+const SOAL = [
+ {id:1,teksA:"Saya biasanya terbuka untuk mengenal orang-orang secara pribadi dan menjalin hubungan dengan mereka.",teksB:"Saya tidak terbiasa terbuka untuk mengenal orang-orang secara pribadi dan menjalin hubungan dengan mereka.",mappingA:"O",mappingB:"G"},
+ {id:2,teksA:"Saya biasanya bereaksi perlahan dan direncanakan.",teksB:"Saya biasanya bereaksi cepat dan spontan.",mappingA:"I",mappingB:"D"},
+ {id:3,teksA:"Saya biasanya menjaga dalam memberikan waktu saya untuk orang lain.",teksB:"Saya biasanya terbuka dalam memberikan waktu saya untuk orang lain.",mappingA:"G",mappingB:"O"},
+ {id:4,teksA:"Saya biasanya memperkenalkan diri saya saat pertemuan sosial.",teksB:"Saya biasanya menunggu orang lain memperkenalkan dirinya kepada saya saat pertemuan sosial.",mappingA:"D",mappingB:"I"},
+ {id:5,teksA:"Saya biasanya fokus membicarakan kepentingan orang yang terlibat meskipun pembicaraan tersebut diluar dari bisnis atau tugas ditangan.",teksB:"Saya biasanya fokus membicarakan tugas, masalah, dan bisnis.",mappingA:"I",mappingB:"G"},
+ {id:6,teksA:"Saya biasanya kurang tegas dan bisa bersabar dengan kecepatan lambat.",teksB:"Saya biasanya tegas dan saya bisa menjadi tidak sabar dengan kecepatan lambat.",mappingA:"I",mappingB:"D"},
+ {id:7,teksA:"Saya biasanya membuat keputusan berdasarkan fakta atau bukti.",teksB:"Saya biasanya membuat keputusan berdasarkan perasaan, pengalaman, atau hubungan.",mappingA:"G",mappingB:"D"},
+ {id:8,teksA:"Saya biasanya sering berkontribusi saat melakukan pembicaraan dalam grup.",teksB:"Saya biasanya jarang berkontribusi saat melakukan pembicaraan dalam grup.",mappingA:"D",mappingB:"I"},
+ {id:9,teksA:"Saya biasanya lebih suka bekerja dengan atau melalui orang lain dan memberikan dukungan bila memungkinkan.",teksB:"Saya biasanya lebih suka bekerja secara mandiri atau mengajarkan keterlibatan orang lain dalam suatu kondisi.",mappingA:"O",mappingB:"G"},
+ {id:10,teksA:"Saya biasanya bertanya atau berbicara tentatif dan tidak langsung.",teksB:"Saya biasanya membuat pertanyaan berempati atau langsung menyatakan pendapat.",mappingA:"I",mappingB:"D"},
+ {id:11,teksA:"Saya biasanya berfokus pada ide-ide, konsep, atau hasil.",teksB:"Saya biasanya berfokus pada orang-orang, interaksi, dan perasaan.",mappingA:"G",mappingB:"O"},
+ {id:12,teksA:"Saya biasanya menggunakan gerak tubuh, ekspresi wajah, dan intonasi suara untuk menekankan poin-poin pembicaraan.",teksB:"Saya biasanya tidak menggunakan gerak tubuh, ekspresi wajah, dan intonasi suara untuk menekankan poin-poin pembicaraan.",mappingA:"O",mappingB:"G"},
+ {id:13,teksA:"Saya biasanya menerima pandangan orang lain (ide, perasaan, dan kekhawatiran).",teksB:"Saya biasanya tidak menerima pandangan orang lain (ide, perasaan, dan kekhawatiran).",mappingA:"O",mappingB:"G"},
+ {id:14,teksA:"Saya biasanya menanggapi risiko dengan mengubah secara hati-hati atau diprediksi.",teksB:"Saya biasanya menanggapi risiko dengan mengubah secara dinamis dan tidak terduga.",mappingA:"I",mappingB:"D"},
+ {id:15,teksA:"Saya biasanya lebih memilih untuk menjaga perasaan dan pikiran pribadi daripada berbagi ketika saya ingin melakukan sesuatu.",teksB:"Saya biasanya merasa lebih alami dan mudah untuk berbagi dan mendiskusikan perasaan dan pikiran pribadi saya kepada orang lain.",mappingA:"G",mappingB:"O"},
+ {id:16,teksA:"Saya biasanya mencari pengalaman dan situasi yang baru dan berbeda.",teksB:"Saya biasanya memilih situasi yang sudah saya ketahui atau serupa dan berhubungan.",mappingA:"D",mappingB:"I"},
+ {id:17,teksA:"Saya biasanya responsif terhadap agenda, minat dan perhatian orang lain.",teksB:"Saya biasanya diarahkan mengenai agenda saya sendiri, kepentingan dan keprihatinan.",mappingA:"O",mappingB:"G"},
+ {id:18,teksA:"Saya biasanya menanggapi konflik perlahan dan tidak langsung.",teksB:"Saya biasanya menanggapi konflik dengan cepat dan langsung.",mappingA:"I",mappingB:"D"},
+];
+
+const KONTEN = {
+  Controller: { posisi:"Aggressive dan Task Focus",
+    ringkas:"Tegas, cepat, dan berorientasi hasil. Nyaman memimpin, mengambil keputusan dengan cepat, dan mendorong kemajuan.",
+    karakteristik:["Terkendali, percaya diri, dan gigih dalam mengejar tujuan","Bergerak dan mengambil keputusan dengan cepat","Langsung dan kuat ketika memberi pendapat atau arahan","Berani mengambil risiko dan cenderung konfrontatif bila perlu"],
+    bertanya:["Jangan tanyakan perasaan, tanyakan hal logis dan berbasis fakta","Contoh: \u201cApa masalah dari ...?\u201d atau \u201cBagaimana rencana Anda menyelesaikan ini?\u201d"],
+    tugas:["Sampaikan secara langsung: \u201cTolong lakukan ini.\u201d","Beri alasan, tujuan, sumber daya, dan batas waktu yang jelas","Setelah mereka menyanggupi, serahkan sepenuhnya"],
+    relasi:"Hormati kebutuhan mereka akan otonomi dan hasil. Beri tantangan nyata, akui pencapaian secara langsung." },
+  Promotor: { posisi:"Aggressive dan People Focus",
+    ringkas:"Antusias, ekspresif, dan senang berinteraksi. Bersemangat pada ide dan perubahan, menikmati perhatian.",
+    karakteristik:["Ekspresif melalui gerak tubuh, mimik, dan intonasi","Enerjik, banyak bicara, dan cepat mengatasi masalah","Terbuka menjalin hubungan dan berbagi antusiasme","Optimistis dan terbuka terhadap hal baru"],
+    bertanya:["Ajukan pertanyaan terbuka: \u201cBisakah Anda ceritakan pendapat Anda?\u201d","Tunjukkan reaksi positif sesering mungkin"],
+    tugas:["Beri mereka ruang bicara sebelum bertindak","Sampaikan bahwa Anda memercayai mereka","Beri umpan balik positif selama pekerjaan berjalan"],
+    relasi:"Beri pengakuan dan ruang berekspresi. Rayakan kemajuan secara terbuka, jaga suasana tetap hangat." },
+  Analyzer: { posisi:"Submissive dan Task Focus",
+    ringkas:"Teliti, metodis, dan analitis. Mengandalkan fakta dan logika, bekerja dengan hati-hati dan terstruktur.",
+    karakteristik:["Pendiam, teliti, dan berorientasi pada akurasi","Mengandalkan fakta dan logika, bukan cerita atau kesan","Tempo kerja terukur, hati-hati terhadap risiko","Nyaman bekerja sendiri dan terstruktur dalam waktu"],
+    bertanya:["Ajukan pertanyaan logis dan berbasis fakta, hindari menanyakan perasaan","Bila perlu hal negatif, beri alasan rasional dan singkat"],
+    tugas:["Jelaskan \u201cmengapa\u201d dan \u201cbagaimana\u201d secara runtut","Beri data, konteks, dan kerangka kerja yang terstruktur"],
+    relasi:"Hargai ketelitian dan kebutuhan mereka akan data. Beri waktu untuk menelaah, hindari mendesak keputusan mendadak." },
+  Supporter: { posisi:"Submissive dan People Focus",
+    ringkas:"Loyal, hangat, dan kooperatif. Mengutamakan harmoni, relasi, dan rasa saling percaya.",
+    karakteristik:["Ramah, terbuka pada perasaan, dan mudah didekati","Mengutamakan keharmonisan dan menghindari konflik","Tempo tenang, mendukung, dan sabar","Loyal serta senang bekerja melalui dan bersama orang lain"],
+    bertanya:["Ciptakan suasana santai sebelum dan selama percakapan","Sampaikan bahwa jawaban mereka membantu Anda"],
+    tugas:["Jelaskan dengan lembut dan baca isyarat bila mereka cemas","Sampaikan Anda ada bila dibutuhkan"],
+    relasi:"Jaga kehangatan dan rasa aman. Beri penghargaan atas loyalitas, dorong dengan lembut alih-alih menekan." },
+};
+
+document.querySelectorAll(".navBtn").forEach(btn => btn.onclick = () => {
+  document.querySelectorAll(".navBtn").forEach(b => b.classList.remove("on"));
+  document.querySelectorAll(".tabPane").forEach(p => p.classList.remove("on"));
+  btn.classList.add("on");
+  $(btn.dataset.tab).classList.add("on");
+});
+document.querySelectorAll("[data-close]").forEach(b => b.onclick = () => {
+  document.querySelectorAll(".modalBg").forEach(m => m.classList.add("hide"));
+});
+
+$("btnSeed").onclick = async () => {
+  $("btnSeed").disabled = true; $("btnSeed").innerHTML = '<span class="spin"></span>';
+  try {
+    const b = writeBatch(db);
+    SOAL.forEach(s => {
+      b.set(doc(db, "questions", String(s.id)), { teksA: s.teksA, teksB: s.teksB });
+      b.set(doc(db, "answerKey", String(s.id)), { mappingA: s.mappingA, mappingB: s.mappingB });
+    });
+    await b.commit();
+    $("setupMsg").innerHTML = '<div class="alert al-ok">18 soal berhasil ditanam. Setup awal selesai, tidak perlu diulang.</div>';
+  } catch (e) {
+    $("setupMsg").innerHTML = `<div class="alert al-dng">Gagal: ${e.message}</div>`;
+  }
+  $("btnSeed").disabled = false; $("btnSeed").innerText = "Tanam 18 Soal";
+};
+
+let semuaBatch = [], semuaPeserta = [];
+
+async function muatSemuaAdmin() {
+  const [batchSnap, pesertaSnap, progSnap, resultSnap] = await Promise.all([
+    getDocs(collection(db, "batches")),
+    getDocs(query(collection(db, "profiles"), where("role", "==", "peserta"))),
+    getDocs(collection(db, "participantProgress")),
+    getDocs(collection(db, "results")),
+  ]);
+  semuaBatch = []; batchSnap.forEach(d => semuaBatch.push({ id: d.id, ...d.data() }));
+  semuaPeserta = []; pesertaSnap.forEach(d => semuaPeserta.push({ id: d.id, ...d.data() }));
+  const progMap = {}; progSnap.forEach(d => progMap[d.id] = d.data());
+  const resultMap = {}; resultSnap.forEach(d => resultMap[d.id] = { id: d.id, ...d.data() });
+
+  $("kpiPeserta").innerText = semuaPeserta.length;
+  $("kpiBatch").innerText = semuaBatch.length;
+  $("kpiSelesai").innerText = resultSnap.size;
+
+  renderBatchAdmin();
+  renderPesertaAdmin(progMap);
+  isiSelectBatchAdmin();
+  renderHasilAdmin(progMap, resultMap);
+}
+
+function fmtWaktuAdmin(ts) {
+  if (!ts) return "-";
+  const d = ts.toDate ? ts.toDate() : new Date(ts);
+  return d.toLocaleString("id-ID", { dateStyle: "medium", timeStyle: "short" });
+}
+function namaBatchAdmin(id) { const b = semuaBatch.find(x => x.id === id); return b ? b.nama : "-"; }
+
+function renderBatchAdmin() {
+  const now = new Date();
+  $("tblBatch").innerHTML = semuaBatch.map(b => {
+    const mulai = b.waktuMulai.toDate(), selesai = b.waktuSelesai.toDate();
+    let badge = '<span class="badge b-frz"><span class="d"></span>Draft</span>';
+    if (b.status === "aktif") {
+      if (now < mulai) badge = '<span class="badge b-info"><span class="d"></span>Terjadwal</span>';
+      else if (now > selesai) badge = '<span class="badge b-warn"><span class="d"></span>Selesai</span>';
+      else badge = '<span class="badge b-ok"><span class="d"></span>Aktif</span>';
+    } else if (b.status === "ditutup") badge = '<span class="badge b-frz"><span class="d"></span>Ditutup</span>';
+    return `<tr><td style="color:var(--ink);font-weight:600">${b.nama}</td>
+      <td>${fmtWaktuAdmin(b.waktuMulai)}</td><td>${fmtWaktuAdmin(b.waktuSelesai)}</td><td>${badge}</td>
+      <td style="text-align:right"><button class="btn btn-ghost sm" data-toggle="${b.id}">${b.status === "aktif" ? "Nonaktifkan" : "Aktifkan"}</button></td></tr>`;
+  }).join("") || '<tr><td colspan="5" style="text-align:center;color:var(--ink-3);padding:30px">Belum ada batch.</td></tr>';
+
+  document.querySelectorAll("[data-toggle]").forEach(btn => btn.onclick = async () => {
+    const b = semuaBatch.find(x => x.id === btn.dataset.toggle);
+    await updateDoc(doc(db, "batches", b.id), { status: b.status === "aktif" ? "ditutup" : "aktif" });
+    muatSemuaAdmin();
+  });
+}
+
+function renderPesertaAdmin(progMap) {
+  const STATUS = { belum_mulai: ["Belum mulai", "b-frz"], sedang_mengerjakan: ["Mengerjakan", "b-warn"], selesai: ["Selesai", "b-ok"] };
+  $("tblPeserta").innerHTML = semuaPeserta.map(p => {
+    const st = STATUS[progMap[p.id]?.status || "belum_mulai"];
+    return `<tr><td style="color:var(--ink);font-weight:600">${p.nama}</td><td>${namaBatchAdmin(p.batchId)}</td>
+      <td><span class="badge ${st[1]}"><span class="d"></span>${st[0]}</span></td></tr>`;
+  }).join("") || '<tr><td colspan="3" style="text-align:center;color:var(--ink-3);padding:30px">Belum ada peserta.</td></tr>';
+}
+
+function isiSelectBatchAdmin() {
+  const opsi = semuaBatch.map(b => `<option value="${b.id}">${b.nama}</option>`).join("");
+  $("pBatch").innerHTML = `<option value="">Pilih batch</option>${opsi}`;
+  $("selBatchHasil").innerHTML = opsi || '<option value="">Belum ada batch</option>';
+}
+
+$("btnBukaBatch").onclick = () => $("modalBatch").classList.remove("hide");
+$("btnSimpanBatch").onclick = async () => {
+  const nama = $("bNama").value.trim(), mulai = $("bMulai").value, selesai = $("bSelesai").value;
+  if (!nama || !mulai || !selesai) { $("batchModalMsg").innerHTML = '<div class="alert al-dng">Lengkapi nama, waktu mulai, dan waktu selesai.</div>'; return; }
+  if (new Date(selesai) <= new Date(mulai)) { $("batchModalMsg").innerHTML = '<div class="alert al-dng">Waktu selesai harus setelah waktu mulai.</div>'; return; }
+  $("btnSimpanBatch").disabled = true;
+  await addDoc(collection(db, "batches"), {
+    nama, deskripsi: $("bDeskripsi").value.trim() || null,
+    waktuMulai: Timestamp.fromDate(new Date(mulai)), waktuSelesai: Timestamp.fromDate(new Date(selesai)),
+    status: $("bAktif").checked ? "aktif" : "draft", dibuatOleh: auth.currentUser.uid, createdAt: Timestamp.now(),
+  });
+  $("btnSimpanBatch").disabled = false;
+  $("modalBatch").classList.add("hide");
+  $("bNama").value = ""; $("bDeskripsi").value = ""; $("bMulai").value = ""; $("bSelesai").value = "";
+  $("batchModalMsg").innerHTML = "";
+  muatSemuaAdmin();
+};
+
+document.querySelectorAll("[data-ptab]").forEach(btn => btn.onclick = () => {
+  document.querySelectorAll("[data-ptab]").forEach(b => b.classList.remove("on"));
+  btn.classList.add("on");
+  $("paneIndividu").classList.toggle("hide", btn.dataset.ptab !== "individu");
+  $("paneMassal").classList.toggle("hide", btn.dataset.ptab !== "massal");
+});
+$("btnBukaPeserta").onclick = () => $("modalPeserta").classList.remove("hide");
+
+async function buatSatuAkun(nama, username, password, batchId) {
+  const namaApp = "secondary-" + Date.now() + Math.random();
+  const secondaryApp = initializeApp(firebaseConfig, namaApp);
+  const secondaryAuth = getAuth(secondaryApp);
+  try {
+    const cred = await createUserWithEmailAndPassword(secondaryAuth, username.trim().toLowerCase() + DOMAIN_PESERTA, password);
+    const uid = cred.user.uid;
+    await signOut(secondaryAuth);
+    await setDoc(doc(db, "profiles", uid), { nama, role: "peserta", batchId, aktif: true, createdAt: Timestamp.now() });
+    await setDoc(doc(db, "participantProgress", uid), { batchId, status: "belum_mulai", jumlahJawab: 0, updatedAt: Timestamp.now() });
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, pesan: e.code === "auth/email-already-in-use" ? "Username sudah dipakai." : e.message };
+  } finally {
+    await deleteApp(secondaryApp);
+  }
+}
+
+$("btnSimpanPeserta").onclick = async () => {
+  const batchId = $("pBatch").value;
+  if (!batchId) { $("pesertaModalMsg").innerHTML = '<div class="alert al-dng">Pilih batch dulu.</div>'; return; }
+  const modeIndividu = !$("paneIndividu").classList.contains("hide");
+  let daftar = [];
+  if (modeIndividu) {
+    const nama = $("pNama").value.trim(), username = $("pUsername").value.trim(), password = $("pPassword").value;
+    if (!nama || !username || !password) { $("pesertaModalMsg").innerHTML = '<div class="alert al-dng">Lengkapi semua kolom.</div>'; return; }
+    daftar = [{ nama, username, password }];
+  } else {
+    daftar = $("pMassal").value.split("\n").map(l => l.trim()).filter(Boolean).map(l => {
+      const [nama, username, password] = l.split(",").map(s => s.trim());
+      return { nama, username, password };
+    });
+  }
+  if (daftar.length === 0) { $("pesertaModalMsg").innerHTML = '<div class="alert al-dng">Tidak ada data untuk disimpan.</div>'; return; }
+
+  $("btnSimpanPeserta").disabled = true; $("btnSimpanPeserta").innerHTML = '<span class="spin"></span>';
+  let berhasil = 0; const gagal = [];
+  for (const d of daftar) {
+    if (!d.nama || !d.username || !d.password) { gagal.push(`${d.username || "?"}: data tidak lengkap`); continue; }
+    const r = await buatSatuAkun(d.nama, d.username, d.password, batchId);
+    if (r.ok) berhasil++; else gagal.push(`${d.username}: ${r.pesan}`);
+  }
+  $("btnSimpanPeserta").disabled = false; $("btnSimpanPeserta").innerText = "Buat akun";
+  $("pesertaModalMsg").innerHTML = `<div class="alert ${gagal.length ? "al-warn" : "al-ok"}">
+    ${berhasil} dari ${daftar.length} akun dibuat.
+    ${gagal.length ? "<br>Gagal: " + gagal.join(", ") : ""}
+  </div>`;
+  if (gagal.length === 0) {
+    setTimeout(() => { $("modalPeserta").classList.add("hide"); $("pesertaModalMsg").innerHTML = ""; $("pNama").value = ""; $("pUsername").value = ""; $("pPassword").value = ""; $("pMassal").value = ""; muatSemuaAdmin(); }, 900);
+  } else { muatSemuaAdmin(); }
+};
+
+let cacheAnswerKey = null;
+async function ambilAnswerKey() {
+  if (cacheAnswerKey) return cacheAnswerKey;
+  const snap = await getDocs(collection(db, "answerKey"));
+  cacheAnswerKey = {};
+  snap.forEach(d => cacheAnswerKey[d.id] = d.data());
+  return cacheAnswerKey;
+}
+
+function hitungSkor(jawaban, answerKey) {
+  const totals = { O: 0, G: 0, D: 0, I: 0 };
+  for (let n = 1; n <= 18; n++) {
+    const pilihan = jawaban[n];
+    const k = answerKey[String(n)];
+    const dim = pilihan === "A" ? k.mappingA : k.mappingB;
+    totals[dim]++;
+  }
+  const seriOG = totals.O === totals.G, seriDI = totals.D === totals.I;
+  const garisBatas = seriOG || seriDI;
+  const resp = totals.O > totals.G ? "O" : "G";
+  const aser = totals.D > totals.I ? "D" : "I";
+  const combo = { OD: "Promotor", GD: "Controller", GI: "Analyzer", OI: "Supporter" };
+  const catatan = [seriOG ? "O=G" : null, seriDI ? "D=I" : null].filter(Boolean).join(", ");
+  return { totals, tipe: garisBatas ? "Garis_Batas" : combo[resp + aser], tipeTerdekat: combo[resp + aser], garisBatas, catatan };
+}
+
+$("selBatchHasil").onchange = () => muatSemuaAdmin();
+
+async function renderHasilAdmin(progMap, resultMap) {
+  const batchId = $("selBatchHasil").value || (semuaBatch[0] && semuaBatch[0].id);
+  const pesertaBatch = semuaPeserta.filter(p => p.batchId === batchId);
+  const rows = [];
+  for (const p of pesertaBatch) {
+    const prog = progMap[p.id] || {};
+    const result = resultMap[`${p.id}_${batchId}`];
+    rows.push({ p, prog, result });
+  }
+  $("tblHasil").innerHTML = rows.map(({ p, prog, result }) => {
+    const jumlah = prog.jumlahJawab || 0;
+    const TIPE_WARNA = { Promotor: "b-acc", Controller: "b-info", Analyzer: "b-frz", Supporter: "b-ok" };
+    let tipeCell = '<span class="badge b-frz"><span class="d"></span>Belum selesai</span>';
+    let laporanCell = "-";
+    let aksiCell = "";
+    if (result) {
+      if (result.garisBatas) {
+        tipeCell = `<span class="badge b-warn"><span class="d"></span>Garis batas (${result.catatanBatas})</span>`;
+        aksiCell = `<button class="btn btn-accent sm" data-batas="${p.id}|${batchId}">Tetapkan tipe</button>`;
+      } else {
+        tipeCell = `<span class="badge ${TIPE_WARNA[result.tipe] || "b-frz"}"><span class="d"></span>${result.tipe}</span>`;
+        laporanCell = result.dirilis ? '<span class="badge b-ok"><span class="d"></span>Dirilis</span>' : '<span class="badge b-frz"><span class="d"></span>Belum</span>';
+        aksiCell = `<button class="btn btn-ghost sm" data-cetak="${p.id}|${batchId}">Cetak</button> <button class="btn btn-primary sm" data-rilis="${p.id}|${batchId}|${!result.dirilis}">${result.dirilis ? "Tarik" : "Rilis"}</button>`;
+      }
+    } else if (prog.status === "selesai") {
+      aksiCell = `<button class="btn btn-primary sm" data-hitung="${p.id}|${batchId}">Hitung Skor</button>`;
+    }
+    return `<tr><td style="color:var(--ink);font-weight:600">${p.nama}</td><td class="mono">${jumlah}/18</td><td>${tipeCell}</td><td>${laporanCell}</td><td style="text-align:right">${aksiCell}</td></tr>`;
+  }).join("") || '<tr><td colspan="5" style="text-align:center;color:var(--ink-3);padding:30px">Belum ada peserta di batch ini.</td></tr>';
+
+  document.querySelectorAll("[data-hitung]").forEach(btn => btn.onclick = () => hitungDanSimpan(btn.dataset.hitung));
+  document.querySelectorAll("[data-rilis]").forEach(btn => btn.onclick = () => toggleRilis(btn.dataset.rilis));
+  document.querySelectorAll("[data-batas]").forEach(btn => btn.onclick = () => bukaModalBatas(btn.dataset.batas));
+  document.querySelectorAll("[data-cetak]").forEach(btn => btn.onclick = () => cetakLaporan(btn.dataset.cetak));
+}
+
+async function hitungDanSimpan(kunci) {
+  const [pesertaId, batchId] = kunci.split("|");
+  const answerKey = await ambilAnswerKey();
+  const respSnap = await getDocs(query(collection(db, "responses"), where("pesertaId", "==", pesertaId), where("batchId", "==", batchId)));
+  const jawaban = {};
+  respSnap.forEach(d => { const x = d.data(); jawaban[x.nomorSoal] = x.pilihan; });
+  if (Object.keys(jawaban).length !== 18) { alert("Jawaban belum lengkap."); return; }
+  const hasil = hitungSkor(jawaban, answerKey);
+  await setDoc(doc(db, "results", `${pesertaId}_${batchId}`), {
+    pesertaId, batchId, totalO: hasil.totals.O, totalG: hasil.totals.G, totalD: hasil.totals.D, totalI: hasil.totals.I,
+    tipe: hasil.tipe, garisBatas: hasil.garisBatas, catatanBatas: hasil.catatan || null, dirilis: false, waktuSelesai: Timestamp.now(),
+  });
+  muatSemuaAdmin();
+}
+
+async function toggleRilis(kunci) {
+  const [pesertaId, batchId, nilai] = kunci.split("|");
+  await updateDoc(doc(db, "results", `${pesertaId}_${batchId}`), { dirilis: nilai === "true" });
+  muatSemuaAdmin();
+}
+
+let batasKunciAktif = null;
+function bukaModalBatas(kunci) {
+  batasKunciAktif = kunci;
+  $("batasInfo").innerText = "Skor peserta ini seri pada salah satu sumbu. Pilih tipe final berdasarkan pertimbangan wawancara atau observasi.";
+  $("selBatas").innerHTML = ["Promotor", "Controller", "Analyzer", "Supporter"].map(t => `<option value="${t}">${t}</option>`).join("");
+  $("modalBatas").classList.remove("hide");
+}
+$("btnSimpanBatas").onclick = async () => {
+  const [pesertaId, batchId] = batasKunciAktif.split("|");
+  await updateDoc(doc(db, "results", `${pesertaId}_${batchId}`), { tipe: $("selBatas").value, garisBatas: false, catatanBatas: null });
+  $("modalBatas").classList.add("hide");
+  muatSemuaAdmin();
+};
+
+async function cetakLaporan(kunci) {
+  const [pesertaId, batchId] = kunci.split("|");
+  const resultSnap = await getDoc(doc(db, "results", `${pesertaId}_${batchId}`));
+  const peserta = semuaPeserta.find(p => p.id === pesertaId);
+  const batch = semuaBatch.find(b => b.id === batchId);
+  const r = resultSnap.data();
+  const k = KONTEN[r.tipe];
+  const w = window.open("", "_blank");
+  w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Laporan CAPS - ${peserta.nama}</title>
+  <style>
+    body{font-family:Helvetica,Arial,sans-serif;color:#141a22;padding:40px;max-width:720px;margin:0 auto}
+    .bar{height:5px;background:#096cbf;margin:-40px -40px 24px}
+    h1{font-size:20px;margin:0}
+    .eyebrow{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#7e8aa0;font-weight:700}
+    .banner{background:#e7f1fb;border-radius:10px;padding:16px;margin:16px 0}
+    .typename{font-size:26px;font-weight:800;color:#096cbf}
+    .scorerow{display:flex;gap:8px;margin-top:10px}
+    .scorebox{flex:1;border:1px solid #e3e8ef;border-radius:8px;padding:8px;text-align:center}
+    .leadercard{background:#fff2dc;border:1px solid #f3d59f;border-radius:10px;padding:16px;margin-top:20px}
+    ul{padding-left:18px;font-size:13px;color:#4d5868}
+    li{margin-bottom:4px}
+    h3{font-size:13px;margin:12px 0 4px}
+    @media print{.noprint{display:none}}
+  </style></head><body>
+  <div class="bar"></div>
+  <div class="eyebrow">Laporan Hasil Asesmen</div>
+  <h1>C.A.P.S. Personal Style Inventory</h1>
+  <p style="font-size:12px;color:#7e8aa0">Nama: <b style="color:#141a22">${peserta.nama}</b> &nbsp; Batch: <b style="color:#141a22">${batch.nama}</b></p>
+  <div class="banner"><div class="eyebrow">Gaya Komunikasi</div><div class="typename">${r.tipe}</div><div style="font-size:12px;color:#4d5868">${k.posisi}</div></div>
+  <p style="font-size:13px;color:#4d5868">${k.ringkas}</p>
+  <div class="scorerow">
+    <div class="scorebox"><div style="font-size:9px;color:#7e8aa0">TOTAL O</div><div style="font-size:18px;font-weight:800;color:#096cbf">${r.totalO}</div></div>
+    <div class="scorebox"><div style="font-size:9px;color:#7e8aa0">TOTAL G</div><div style="font-size:18px;font-weight:800;color:#096cbf">${r.totalG}</div></div>
+    <div class="scorebox"><div style="font-size:9px;color:#7e8aa0">TOTAL D</div><div style="font-size:18px;font-weight:800;color:#096cbf">${r.totalD}</div></div>
+    <div class="scorebox"><div style="font-size:9px;color:#7e8aa0">TOTAL I</div><div style="font-size:18px;font-weight:800;color:#096cbf">${r.totalI}</div></div>
+  </div>
+  <h3>Karakteristik utama</h3><ul>${k.karakteristik.map(x => `<li>${x}</li>`).join("")}</ul>
+  <div class="leadercard">
+    <div style="font-weight:800;color:#cf7406;font-size:13px">Panduan bagi atasan dan rekan kerja</div>
+    <p style="font-size:12px;color:#4d5868">Cara mendekati dan membangun relasi dengan ${peserta.nama} sesuai gaya ${r.tipe}.</p>
+    <h3>Cara mengajukan pertanyaan</h3><ul>${k.bertanya.map(x => `<li>${x}</li>`).join("")}</ul>
+    <h3>Cara memberikan tugas</h3><ul>${k.tugas.map(x => `<li>${x}</li>`).join("")}</ul>
+    <h3>Membangun relasi</h3><p style="font-size:12.5px;color:#4d5868">${k.relasi}</p>
+  </div>
+  <p style="font-size:10px;color:#7e8aa0;margin-top:30px">HCR.ID - Developing Corporate Future Leader</p>
+  <div class="noprint" style="margin-top:20px"><button onclick="window.print()" style="padding:10px 18px;background:#096cbf;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer">Cetak / Simpan sebagai PDF</button></div>
+  </body></html>`);
+  w.document.close();
+}
+</script>
+</body>
+</html>
