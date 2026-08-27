@@ -62,6 +62,15 @@
 
   /* ---- layar login (dipakai peserta MAUPUN admin) ---- */
   #layarLogin{display:grid;grid-template-columns:1.1fr 1fr;min-height:100vh}
+  @media (max-width:760px){
+    #layarLogin{grid-template-columns:1fr;grid-template-rows:auto 1fr;min-height:100vh}
+    .brandPanel{padding:32px 24px 28px}
+    .brandPanel h1{font-size:26px;margin-top:20px}
+    .brandPanel p{font-size:13px;max-width:none}
+    .formPanel{padding:32px 24px 40px}
+    .topbar{padding:14px 18px}
+    .body{padding:28px 18px}
+  }
   .brandPanel{background:linear-gradient(160deg,var(--dark) 0%,#0c1c30 60%,var(--primary-600) 140%);color:#fff;padding:48px 44px;display:flex;flex-direction:column;justify-content:space-between}
   .brandPanel h1{font-family:var(--font-d);font-size:32px;font-weight:800;letter-spacing:-1px;line-height:1.1;margin:32px 0 0}
   .brandPanel p{color:#c3d3e6;font-size:14px;line-height:1.6;max-width:380px}
@@ -279,12 +288,16 @@
       <section id="tabHasil" class="tabPane">
         <span class="subt">Hasil & Laporan</span>
         <h1 class="pageTitle">Hasil asesmen</h1>
-        <div class="field" style="max-width:320px"><label>Pilih batch</label>
-          <select id="selBatchHasil" class="inp"></select></div>
+        <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap">
+          <div class="field" style="max-width:320px;flex:1;min-width:220px"><label>Pilih batch</label>
+            <select id="selBatchHasil" class="inp"></select></div>
+          <button id="btnMuatUlangHasil" class="btn btn-ghost" style="margin-bottom:14px">Muat ulang</button>
+        </div>
         <div class="card" style="padding:0;overflow:auto">
           <table><thead><tr><th>Nama</th><th>Jawaban</th><th>Tipe</th><th>Laporan</th><th></th></tr></thead>
           <tbody id="tblHasil"></tbody></table>
         </div>
+        <p id="waktuMuatHasil" style="font-size:11.5px;color:var(--ink-3);margin-top:8px"></p>
       </section>
     </main>
   </div>
@@ -620,13 +633,26 @@ $("btnKirim").onclick = async () => {
     $("kuisError").classList.remove("hide");
     return;
   }
+  $("kuisError").classList.add("hide");
   $("btnKirim").disabled = true; $("btnKirim").innerHTML = '<span class="spin"></span>';
   const uid = auth.currentUser.uid;
-  await setDoc(doc(db, "participantProgress", uid), {
-    batchId: profilSaya.batchId, status: "selesai",
-    jumlahJawab: soalList.length, updatedAt: Timestamp.now(),
-  }, { merge: true });
-  tampilkan("layarSelesai");
+  try {
+    await setDoc(doc(db, "participantProgress", uid), {
+      batchId: profilSaya.batchId, status: "selesai",
+      jumlahJawab: soalList.length, updatedAt: Timestamp.now(),
+    }, { merge: true });
+    // Verifikasi tersimpan sebelum menampilkan layar terima kasih,
+    // supaya tidak ada kejadian "sukses" padahal belum tersimpan.
+    const cekUlang = await getDoc(doc(db, "participantProgress", uid));
+    if (!cekUlang.exists() || cekUlang.data().status !== "selesai") {
+      throw new Error("Status belum tersimpan dengan benar, coba kirim ulang.");
+    }
+    tampilkan("layarSelesai");
+  } catch (e) {
+    $("kuisError").innerText = "Gagal mengirim: " + e.message + ". Periksa koneksi internet dan coba lagi.";
+    $("kuisError").classList.remove("hide");
+    $("btnKirim").disabled = false; $("btnKirim").innerText = "Kirim jawaban";
+  }
 };
 
 /* ============================================================
@@ -913,8 +939,10 @@ function hitungSkor(jawaban, answerKey) {
 }
 
 $("selBatchHasil").onchange = () => muatSemuaAdmin();
+$("btnMuatUlangHasil").onclick = () => muatSemuaAdmin();
 
 async function renderHasilAdmin(progMap, resultMap) {
+  $("waktuMuatHasil").innerText = "Terakhir dimuat: " + new Date().toLocaleTimeString("id-ID");
   const batchId = $("selBatchHasil").value || (semuaBatch[0] && semuaBatch[0].id);
   const pesertaBatch = semuaPeserta.filter(p => p.batchId === batchId);
   const rows = [];
