@@ -681,29 +681,45 @@ const SOAL = [
 
 const KONTEN = {
   Controller: { posisi:"Aggressive dan Task Focus",
-    ringkas:"Tegas, cepat, dan berorientasi hasil. Nyaman memimpin, mengambil keputusan dengan cepat, dan mendorong kemajuan.",
-    karakteristik:["Terkendali, percaya diri, dan gigih dalam mengejar tujuan","Bergerak dan mengambil keputusan dengan cepat","Langsung dan kuat ketika memberi pendapat atau arahan","Berani mengambil risiko dan cenderung konfrontatif bila perlu"],
-    bertanya:["Jangan tanyakan perasaan, tanyakan hal logis dan berbasis fakta","Contoh: \u201cApa masalah dari ...?\u201d atau \u201cBagaimana rencana Anda menyelesaikan ini?\u201d"],
-    tugas:["Sampaikan secara langsung: \u201cTolong lakukan ini.\u201d","Beri alasan, tujuan, sumber daya, dan batas waktu yang jelas","Setelah mereka menyanggupi, serahkan sepenuhnya"],
-    relasi:"Hormati kebutuhan mereka akan otonomi dan hasil. Beri tantangan nyata, akui pencapaian secara langsung." },
+    ringkas:"Tegas, cepat, dan berorientasi hasil. Nyaman memimpin, mengambil keputusan dengan cepat, dan mendorong kemajuan. Fokus utama pada tugas dan pencapaian, bukan pada aspek relasi.",
+    karakteristik:["Terkendali, percaya diri, dan gigih dalam mengejar tujuan","Bergerak dan mengambil keputusan dengan cepat","Langsung dan kuat ketika memberi pendapat atau arahan","Berani mengambil risiko dan cenderung konfrontatif bila perlu","Kontak mata intens dan memberi tekanan untuk keputusan"],
+    sifatProduktif:["Cepat bertindak dan percaya diri","Gigih dan mendesak saat perlu","Bersemangat untuk berubah dan fleksibel","Memaksa dengan cara yang terarah"],
+    situasiMendukung:["Diberi tanggung jawab dan kesempatan memimpin","Ada kebebasan menyelesaikan tugas dengan caranya sendiri","Lingkungan bergerak cepat, menantang, dan kompetitif","Memiliki otoritas dan dihargai atas hasil"],
+    penghambat:["Situasi berada di luar kendali mereka","Lingkungan lambat atau banyak gangguan","Tidak ada yang memimpin atau bertanggung jawab","Aktivitas fisik dan ruang gerak dibatasi"],
+    saranPengembangan:["Melatih kesabaran dan mendengarkan sebelum menyimpulkan","Memberi ruang bagi masukan orang lain sebelum memutuskan","Memperhatikan dampak keputusan cepat pada aspek relasi tim"],
+    bertanya:["Jangan tanyakan perasaan, tanyakan hal logis dan berbasis fakta","Contoh: \u201cApa masalah dari ...?\u201d atau \u201cBagaimana rencana Anda menyelesaikan ini?\u201d","Sampaikan bahwa jawaban mereka sedang membantu Anda"],
+    tugas:["Sampaikan secara langsung: \u201cTolong lakukan ini.\u201d","Beri alasan, tujuan, sumber daya, dan batas waktu yang jelas","Setelah mereka menyanggupi, serahkan sepenuhnya dan percayakan"],
+    relasi:"Hormati kebutuhan mereka akan otonomi dan hasil. Beri tantangan nyata, akui pencapaian secara langsung, dan hindari mengatur detail cara kerja mereka." },
   Promotor: { posisi:"Aggressive dan People Focus",
-    ringkas:"Antusias, ekspresif, dan senang berinteraksi. Bersemangat pada ide dan perubahan, menikmati perhatian.",
-    karakteristik:["Ekspresif melalui gerak tubuh, mimik, dan intonasi","Enerjik, banyak bicara, dan cepat mengatasi masalah","Terbuka menjalin hubungan dan berbagi antusiasme","Optimistis dan terbuka terhadap hal baru"],
-    bertanya:["Ajukan pertanyaan terbuka: \u201cBisakah Anda ceritakan pendapat Anda?\u201d","Tunjukkan reaksi positif sesering mungkin"],
-    tugas:["Beri mereka ruang bicara sebelum bertindak","Sampaikan bahwa Anda memercayai mereka","Beri umpan balik positif selama pekerjaan berjalan"],
-    relasi:"Beri pengakuan dan ruang berekspresi. Rayakan kemajuan secara terbuka, jaga suasana tetap hangat." },
+    ringkas:"Antusias, ekspresif, dan senang berinteraksi. Bersemangat pada ide dan perubahan, menikmati perhatian, dan bergerak dengan energi tinggi. Fokus pada orang sekaligus dorongan untuk maju.",
+    karakteristik:["Ekspresif melalui gerak tubuh, mimik, dan intonasi","Enerjik, banyak bicara, dan cepat mengatasi masalah","Terbuka menjalin hubungan dan berbagi antusiasme","Berani mengambil risiko dengan gaya yang dinamis","Optimistis dan terbuka terhadap hal baru"],
+    sifatProduktif:["Antusias dan berjiwa muda","Bijaksana dan mudah beradaptasi","Terampil secara sosial","Bersemangat untuk berubah"],
+    situasiMendukung:["Ada banyak perhatian dan kesempatan berinteraksi","Boleh menceritakan apa yang mereka pelajari melalui diskusi","Lingkungan optimis dan terbuka pada perubahan","Ada aktivitas berorientasi tindakan"],
+    penghambat:["Hanya ada rutinitas tanpa ruang eksplorasi","Tugas analitis, detail, dan menuntut disiplin sistematis ketat","Interaksi sosial dibatasi","Lingkungan kaku tanpa petualangan"],
+    saranPengembangan:["Melatih ketuntasan dan tindak lanjut pada detail","Menyeimbangkan antusiasme dengan perencanaan yang matang","Menjaga fokus agar tidak mudah teralih"],
+    bertanya:["Ajukan pertanyaan terbuka: \u201cBisakah Anda ceritakan pendapat Anda tentang ...?\u201d","Tunjukkan reaksi positif sesering mungkin: \u201cBagus, lanjutkan.\u201d","Jangan menghentikan, cukup alihkan arah pembicaraan dengan halus"],
+    tugas:["Beri mereka ruang bicara sebelum bertindak","Sampaikan bahwa Anda memercayai mereka: \u201cBisakah saya serahkan ini kepada Anda?\u201d","Beri umpan balik positif selama pekerjaan berjalan"],
+    relasi:"Beri pengakuan dan ruang berekspresi. Rayakan kemajuan secara terbuka, libatkan mereka dalam diskusi, dan jaga suasana tetap hangat serta optimis." },
   Analyzer: { posisi:"Submissive dan Task Focus",
-    ringkas:"Teliti, metodis, dan analitis. Mengandalkan fakta dan logika, bekerja dengan hati-hati dan terstruktur.",
-    karakteristik:["Pendiam, teliti, dan berorientasi pada akurasi","Mengandalkan fakta dan logika, bukan cerita atau kesan","Tempo kerja terukur, hati-hati terhadap risiko","Nyaman bekerja sendiri dan terstruktur dalam waktu"],
-    bertanya:["Ajukan pertanyaan logis dan berbasis fakta, hindari menanyakan perasaan","Bila perlu hal negatif, beri alasan rasional dan singkat"],
-    tugas:["Jelaskan \u201cmengapa\u201d dan \u201cbagaimana\u201d secara runtut","Beri data, konteks, dan kerangka kerja yang terstruktur"],
-    relasi:"Hargai ketelitian dan kebutuhan mereka akan data. Beri waktu untuk menelaah, hindari mendesak keputusan mendadak." },
+    ringkas:"Teliti, metodis, dan analitis. Mengandalkan fakta dan logika, bekerja dengan hati-hati dan terstruktur. Fokus pada tugas dengan tempo yang terukur dan pertimbangan mendalam.",
+    karakteristik:["Pendiam, teliti, dan berorientasi pada akurasi","Mengandalkan fakta dan logika, bukan cerita atau kesan","Tempo kerja terukur, hati-hati terhadap risiko","Nyaman bekerja sendiri dan terstruktur dalam waktu","Ekspresi terkendali dan tidak menyukai basa-basi"],
+    sifatProduktif:["Pendiam dan teliti","Metodis dan sistematis","Analitis dan berbasis data","Praktis dan ekonomis"],
+    situasiMendukung:["Tersedia struktur dan sistematika yang jelas","Ada keleluasaan untuk menelaah sebelum memutuskan","Tekanan rendah dan perhatian pada kualitas hasil","Aturan yang jelas dalam berinteraksi"],
+    penghambat:["Tugas tanpa batasan dan arahan yang jelas","Keputusan yang tidak didasarkan pada fakta dan data","Banyak tekanan dan gangguan yang ramai","Ketidakkonsistenan yang menjadi rutinitas"],
+    saranPengembangan:["Melatih pengambilan keputusan lebih cepat saat data cukup","Membuka diri pada masukan yang bersifat relasional","Menyeimbangkan ketelitian dengan tenggat yang realistis"],
+    bertanya:["Ajukan pertanyaan logis dan berbasis fakta, hindari menanyakan perasaan","Contoh: \u201cApa masalah dari ...?\u201d, \u201cBagaimana rencana penyelesaiannya?\u201d","Bila perlu menyampaikan hal negatif, beri alasan rasional dan singkat"],
+    tugas:["Jelaskan \u201cmengapa\u201d dan \u201cbagaimana\u201d secara runtut","Contoh: \u201cKita perlu menyelesaikan ini karena ... Sebaiknya mulai dari A, lalu B.\u201d","Beri data, konteks, dan kerangka kerja yang terstruktur"],
+    relasi:"Hargai ketelitian dan kebutuhan mereka akan data. Beri waktu untuk menelaah, hindari mendesak keputusan mendadak, dan tunjukkan penghormatan pada logika mereka." },
   Supporter: { posisi:"Submissive dan People Focus",
-    ringkas:"Loyal, hangat, dan kooperatif. Mengutamakan harmoni, relasi, dan rasa saling percaya.",
-    karakteristik:["Ramah, terbuka pada perasaan, dan mudah didekati","Mengutamakan keharmonisan dan menghindari konflik","Tempo tenang, mendukung, dan sabar","Loyal serta senang bekerja melalui dan bersama orang lain"],
-    bertanya:["Ciptakan suasana santai sebelum dan selama percakapan","Sampaikan bahwa jawaban mereka membantu Anda"],
-    tugas:["Jelaskan dengan lembut dan baca isyarat bila mereka cemas","Sampaikan Anda ada bila dibutuhkan"],
-    relasi:"Jaga kehangatan dan rasa aman. Beri penghargaan atas loyalitas, dorong dengan lembut alih-alih menekan." },
+    ringkas:"Loyal, hangat, dan kooperatif. Mengutamakan harmoni, relasi, dan rasa saling percaya. Fokus pada orang dengan tempo yang tenang dan pembawaan yang mendukung.",
+    karakteristik:["Ramah, terbuka pada perasaan, dan mudah didekati","Mengutamakan keharmonisan dan menghindari konflik","Tempo tenang, mendukung, dan sabar","Loyal serta senang bekerja melalui dan bersama orang lain","Ekspresif secara hangat namun tidak mendominasi"],
+    sifatProduktif:["Loyal dan bermanfaat","Reseptif dan sederhana","Terampil secara sosial","Idealis dan penuh kepercayaan"],
+    situasiMendukung:["Dikelilingi keramahan, kehangatan, dan rasa hormat","Ada keharmonisan dan perasaan yang positif","Tersedia struktur, bimbingan, dan pengawasan yang mendukung","Loyalitas mereka dihargai"],
+    penghambat:["Konflik dianggap normal dalam lingkungan tertentu","Sulit meminta bantuan dan tidak ada yang mengulurkan tangan","Banyak tekanan dan perubahan yang tidak konsisten","Pemimpin yang terlalu mendominasi"],
+    saranPengembangan:["Melatih keberanian menyuarakan pendapat dan meminta bantuan","Membangun ketahanan menghadapi konflik yang sehat","Menyeimbangkan kebutuhan orang lain dengan kebutuhan diri"],
+    bertanya:["Ciptakan suasana santai sebelum dan selama percakapan","Sampaikan penghargaan: \u201cSaya menghargai kontribusi Anda minggu lalu.\u201d","Sampaikan bahwa jawaban mereka membantu Anda"],
+    tugas:["Jelaskan dengan lembut dan baca isyarat bila mereka cemas","Sampaikan tugas itu membantu Anda, dan Anda ada bila dibutuhkan","Contoh: \u201cJika Anda butuh bantuan, saya di sini.\u201d"],
+    relasi:"Jaga kehangatan dan rasa aman. Beri penghargaan atas loyalitas, dorong dengan lembut alih-alih menekan, dan bantu mereka merasa nyaman menyuarakan kebutuhan." },
 };
 
 document.querySelectorAll(".navBtn").forEach(btn => btn.onclick = () => {
@@ -1014,16 +1030,27 @@ $("btnSimpanBatas").onclick = async () => {
 };
 
 async function cetakLaporan(kunci) {
+  // Buka jendela SEBELUM await apapun, supaya browser tidak menganggap
+  // ini popup otomatis dan memblokirnya.
+  const w = window.open("", "_blank");
+  if (!w) {
+    alert("Browser memblokir jendela pop-up. Izinkan pop-up untuk situs ini di pengaturan browser, lalu klik Cetak lagi.");
+    return;
+  }
+  w.document.write("<p style='font-family:sans-serif;padding:40px;color:#7e8aa0'>Menyiapkan laporan...</p>");
+
   const [pesertaId, batchId] = kunci.split("|");
   const resultSnap = await getDoc(doc(db, "results", `${pesertaId}_${batchId}`));
   const peserta = semuaPeserta.find(p => p.id === pesertaId);
   const batch = semuaBatch.find(b => b.id === batchId);
   const r = resultSnap.data();
   const k = KONTEN[r.tipe];
-  const w = window.open("", "_blank");
+  w.document.open();
   w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Laporan CAPS - ${peserta.nama}</title>
   <style>
     body{font-family:Helvetica,Arial,sans-serif;color:#141a22;padding:40px;max-width:720px;margin:0 auto}
+    .halaman{page-break-after:always}
+    .halaman:last-of-type{page-break-after:auto}
     .bar{height:5px;background:#096cbf;margin:-40px -40px 24px}
     h1{font-size:20px;margin:0}
     .eyebrow{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#7e8aa0;font-weight:700}
@@ -1032,33 +1059,61 @@ async function cetakLaporan(kunci) {
     .scorerow{display:flex;gap:8px;margin-top:10px}
     .scorebox{flex:1;border:1px solid #e3e8ef;border-radius:8px;padding:8px;text-align:center}
     .leadercard{background:#fff2dc;border:1px solid #f3d59f;border-radius:10px;padding:16px;margin-top:20px}
+    .duakolom{display:flex;gap:24px}
+    .duakolom > div{flex:1}
     ul{padding-left:18px;font-size:13px;color:#4d5868}
     li{margin-bottom:4px}
     h3{font-size:13px;margin:12px 0 4px}
+    h2sec{display:block;font-size:15px;font-weight:800;margin:22px 0 10px}
+    .catatan{font-size:9px;color:#7e8aa0;margin-top:4px}
     @media print{.noprint{display:none}}
   </style></head><body>
-  <div class="bar"></div>
-  <div class="eyebrow">Laporan Hasil Asesmen</div>
-  <h1>C.A.P.S. Personal Style Inventory</h1>
-  <p style="font-size:12px;color:#7e8aa0">Nama: <b style="color:#141a22">${peserta.nama}</b> &nbsp; Batch: <b style="color:#141a22">${batch.nama}</b></p>
-  <div class="banner"><div class="eyebrow">Gaya Komunikasi</div><div class="typename">${r.tipe}</div><div style="font-size:12px;color:#4d5868">${k.posisi}</div></div>
-  <p style="font-size:13px;color:#4d5868">${k.ringkas}</p>
-  <div class="scorerow">
-    <div class="scorebox"><div style="font-size:9px;color:#7e8aa0">TOTAL O</div><div style="font-size:18px;font-weight:800;color:#096cbf">${r.totalO}</div></div>
-    <div class="scorebox"><div style="font-size:9px;color:#7e8aa0">TOTAL G</div><div style="font-size:18px;font-weight:800;color:#096cbf">${r.totalG}</div></div>
-    <div class="scorebox"><div style="font-size:9px;color:#7e8aa0">TOTAL D</div><div style="font-size:18px;font-weight:800;color:#096cbf">${r.totalD}</div></div>
-    <div class="scorebox"><div style="font-size:9px;color:#7e8aa0">TOTAL I</div><div style="font-size:18px;font-weight:800;color:#096cbf">${r.totalI}</div></div>
+
+  <div class="halaman">
+    <div class="bar"></div>
+    <div class="eyebrow">Laporan Hasil Asesmen</div>
+    <h1>C.A.P.S. Personal Style Inventory</h1>
+    <p style="font-size:12px;color:#7e8aa0">Nama: <b style="color:#141a22">${peserta.nama}</b> &nbsp; Batch: <b style="color:#141a22">${batch.nama}</b></p>
+    <div class="banner"><div class="eyebrow">Gaya Komunikasi</div><div class="typename">${r.tipe}</div><div style="font-size:12px;color:#4d5868">${k.posisi}</div></div>
+    <p style="font-size:13px;color:#4d5868">${k.ringkas}</p>
+    <div class="scorerow">
+      <div class="scorebox"><div style="font-size:9px;color:#7e8aa0">TOTAL O</div><div style="font-size:18px;font-weight:800;color:#096cbf">${r.totalO}</div></div>
+      <div class="scorebox"><div style="font-size:9px;color:#7e8aa0">TOTAL G</div><div style="font-size:18px;font-weight:800;color:#096cbf">${r.totalG}</div></div>
+      <div class="scorebox"><div style="font-size:9px;color:#7e8aa0">TOTAL D</div><div style="font-size:18px;font-weight:800;color:#096cbf">${r.totalD}</div></div>
+      <div class="scorebox"><div style="font-size:9px;color:#7e8aa0">TOTAL I</div><div style="font-size:18px;font-weight:800;color:#096cbf">${r.totalI}</div></div>
+    </div>
+    <p class="catatan">O dan G mengukur responsivitas (People vs Task). D dan I mengukur asertivitas (Aggressive vs Submissive).</p>
+
+    <h2sec>Karakteristik utama</h2sec><ul>${k.karakteristik.map(x => `<li>${x}</li>`).join("")}</ul>
+
+    <div class="duakolom">
+      <div><h2sec>Sifat produktif</h2sec><ul>${k.sifatProduktif.map(x => `<li>${x}</li>`).join("")}</ul></div>
+      <div><h2sec>Saran pengembangan diri</h2sec><ul>${k.saranPengembangan.map(x => `<li>${x}</li>`).join("")}</ul></div>
+    </div>
+    <p style="font-size:9px;color:#7e8aa0;margin-top:20px">HCR.ID - Developing Corporate Future Leader &middot; halaman 1</p>
   </div>
-  <h3>Karakteristik utama</h3><ul>${k.karakteristik.map(x => `<li>${x}</li>`).join("")}</ul>
-  <div class="leadercard">
-    <div style="font-weight:800;color:#cf7406;font-size:13px">Panduan bagi atasan dan rekan kerja</div>
-    <p style="font-size:12px;color:#4d5868">Cara mendekati dan membangun relasi dengan ${peserta.nama} sesuai gaya ${r.tipe}.</p>
-    <h3>Cara mengajukan pertanyaan</h3><ul>${k.bertanya.map(x => `<li>${x}</li>`).join("")}</ul>
-    <h3>Cara memberikan tugas</h3><ul>${k.tugas.map(x => `<li>${x}</li>`).join("")}</ul>
-    <h3>Membangun relasi</h3><p style="font-size:12.5px;color:#4d5868">${k.relasi}</p>
+
+  <div class="halaman">
+    <div class="bar"></div>
+    <div class="eyebrow">${peserta.nama} - ${r.tipe}</div>
+    <h1>Lingkungan kerja &amp; pendekatan</h1>
+
+    <div class="duakolom" style="margin-top:16px">
+      <div><h2sec>Situasi yang mendukung prestasi</h2sec><ul>${k.situasiMendukung.map(x => `<li>${x}</li>`).join("")}</ul></div>
+      <div><h2sec>Yang menghambat kinerja</h2sec><ul>${k.penghambat.map(x => `<li>${x}</li>`).join("")}</ul></div>
+    </div>
+
+    <div class="leadercard">
+      <div style="font-weight:800;color:#cf7406;font-size:13px">Panduan bagi atasan dan rekan kerja</div>
+      <p style="font-size:12px;color:#4d5868">Cara mendekati, berkomunikasi, dan membangun relasi dengan ${peserta.nama} sesuai gaya ${r.tipe}.</p>
+      <h3>Cara mengajukan pertanyaan</h3><ul>${k.bertanya.map(x => `<li>${x}</li>`).join("")}</ul>
+      <h3>Cara memberikan tugas</h3><ul>${k.tugas.map(x => `<li>${x}</li>`).join("")}</ul>
+      <h3>Membangun relasi</h3><p style="font-size:12.5px;color:#4d5868">${k.relasi}</p>
+    </div>
+    <p style="font-size:9px;color:#7e8aa0;margin-top:20px">HCR.ID - Developing Corporate Future Leader &middot; halaman 2</p>
   </div>
-  <p style="font-size:10px;color:#7e8aa0;margin-top:30px">HCR.ID - Developing Corporate Future Leader</p>
-  <div class="noprint" style="margin-top:20px"><button onclick="window.print()" style="padding:10px 18px;background:#096cbf;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer">Cetak / Simpan sebagai PDF</button></div>
+
+  <div class="noprint" style="margin-top:8px;text-align:center"><button onclick="window.print()" style="padding:10px 18px;background:#096cbf;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer">Cetak / Simpan sebagai PDF</button></div>
   </body></html>`);
   w.document.close();
 }
