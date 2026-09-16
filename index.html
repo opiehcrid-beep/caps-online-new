@@ -139,13 +139,32 @@
   </section>
   <section class="formPanel">
     <div class="formBox">
-      <span class="subt">Masuk</span>
-      <h2 style="font-family:var(--font-d);font-size:24px;font-weight:800;margin:8px 0 4px;letter-spacing:-.6px">Mulai asesmen Anda</h2>
-      <p style="color:var(--ink-3);font-size:13px;margin:0 0 22px">Peserta: pakai username dari fasilitator. Admin/fasilitator: pakai email.</p>
-      <div id="loginError" class="alert al-dng hide"></div>
-      <div class="field"><label>Username (peserta) atau email (admin)</label><input id="inUsername" class="inp" placeholder="mis. budi-01 atau admin@hcr.id"></div>
-      <div class="field"><label>Password</label><input id="inPassword" class="inp" type="password" placeholder="••••••••"></div>
-      <button id="btnLogin" class="btn btn-primary block">Masuk</button>
+      <div style="display:flex;gap:8px;margin-bottom:22px">
+        <button id="tabLoginPeserta" type="button" class="tabx on">Peserta</button>
+        <button id="tabLoginAdmin" type="button" class="tabx">Admin/Fasilitator</button>
+      </div>
+
+      <!-- ---- PESERTA: cukup nama + instansi, tanpa password ---- -->
+      <div id="paneLoginPeserta">
+        <span class="subt">Mulai asesmen</span>
+        <h2 style="font-family:var(--font-d);font-size:24px;font-weight:800;margin:8px 0 4px;letter-spacing:-.6px">Isi data diri Anda</h2>
+        <p style="color:var(--ink-3);font-size:13px;margin:0 0 22px">Cukup isi nama lengkap dan instansi/perusahaan Anda, tidak perlu username maupun password.</p>
+        <div id="pesertaLoginError" class="alert al-dng hide"></div>
+        <div class="field"><label>Nama lengkap</label><input id="inNamaPeserta" class="inp" placeholder="mis. Budi Santoso"></div>
+        <div class="field"><label>Instansi/Perusahaan</label><input id="inInstansiPeserta" class="inp" placeholder="mis. PT Sinergi Karya"></div>
+        <button id="btnMulaiPeserta" class="btn btn-primary block">Mulai Asesmen</button>
+      </div>
+
+      <!-- ---- ADMIN/FASILITATOR: tetap email + password ---- -->
+      <div id="paneLoginAdmin" class="hide">
+        <span class="subt">Masuk</span>
+        <h2 style="font-family:var(--font-d);font-size:24px;font-weight:800;margin:8px 0 4px;letter-spacing:-.6px">Masuk sebagai fasilitator</h2>
+        <p style="color:var(--ink-3);font-size:13px;margin:0 0 22px">Khusus admin/fasilitator, gunakan email dan password.</p>
+        <div id="loginError" class="alert al-dng hide"></div>
+        <div class="field"><label>Email</label><input id="inUsername" class="inp" placeholder="admin@hcr.id"></div>
+        <div class="field"><label>Password</label><input id="inPassword" class="inp" type="password" placeholder="••••••••"></div>
+        <button id="btnLogin" class="btn btn-primary block">Masuk</button>
+      </div>
     </div>
   </section>
 </main>
@@ -280,7 +299,7 @@
           <button id="btnBukaPeserta" class="btn btn-primary">+ Tambah peserta</button>
         </div>
         <div class="card" style="padding:0;overflow:auto">
-          <table><thead><tr><th>Nama</th><th>Batch</th><th>Status</th></tr></thead>
+          <table><thead><tr><th>Nama</th><th>Instansi</th><th>Batch</th><th>Status</th></tr></thead>
           <tbody id="tblPeserta"></tbody></table>
         </div>
       </section>
@@ -412,7 +431,7 @@ const DOMAIN_PESERTA = "@peserta.caps.local";
 
 import { initializeApp, deleteApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
 import {
-  getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword
+  getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInAnonymously
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
 import {
   getFirestore, doc, getDoc, setDoc, getDocs, addDoc, updateDoc, collection, query, where, Timestamp, writeBatch
@@ -427,33 +446,116 @@ function tampilkan(id) {
 }
 
 /* ============================================================
-   LOGIN TUNGGAL
-   Kalau kolom pertama mengandung "@", dianggap email admin.
-   Kalau tidak, dianggap username peserta dan ditambah domain.
+   TAB LOGIN — Peserta (nama+instansi saja) vs Admin (email+password)
+   ============================================================ */
+$("tabLoginPeserta").onclick = () => {
+  $("tabLoginPeserta").classList.add("on"); $("tabLoginAdmin").classList.remove("on");
+  $("paneLoginPeserta").classList.remove("hide"); $("paneLoginAdmin").classList.add("hide");
+};
+$("tabLoginAdmin").onclick = () => {
+  $("tabLoginAdmin").classList.add("on"); $("tabLoginPeserta").classList.remove("on");
+  $("paneLoginAdmin").classList.remove("hide"); $("paneLoginPeserta").classList.add("hide");
+};
+
+/* ============================================================
+   LOGIN ADMIN/FASILITATOR — tetap email + password
    ============================================================ */
 $("btnLogin").onclick = async () => {
-  const isi = $("inUsername").value.trim();
+  const email = $("inUsername").value.trim().toLowerCase();
   const p = $("inPassword").value;
   $("loginError").classList.add("hide");
-  if (!isi || !p) { errLogin("Isi username/email dan password terlebih dahulu."); return; }
-  const email = isi.includes("@") ? isi.toLowerCase() : isi.toLowerCase() + DOMAIN_PESERTA;
+  if (!email || !p) { errLogin("Isi email dan password terlebih dahulu."); return; }
   $("btnLogin").disabled = true; $("btnLogin").innerHTML = '<span class="spin"></span>';
   try {
     await signInWithEmailAndPassword(auth, email, p);
   } catch (e) {
-    errLogin("Username/email atau password salah. Periksa kembali kredensial Anda.");
+    errLogin("Email atau password salah. Periksa kembali kredensial Anda.");
     $("btnLogin").disabled = false; $("btnLogin").innerText = "Masuk";
   }
 };
 function errLogin(msg) { $("loginError").innerText = msg; $("loginError").classList.remove("hide"); }
+function errLoginPeserta(msg) { $("pesertaLoginError").innerText = msg; $("pesertaLoginError").classList.remove("hide"); }
 $("btnKeluar1").onclick = () => signOut(auth);
 $("btnKeluar2").onclick = () => signOut(auth);
 $("btnKeluarAdmin").onclick = () => signOut(auth);
 
 /* ============================================================
-   ROUTER UTAMA — cabang berdasarkan peran setelah login
+   REGISTRASI PESERTA — nama + instansi saja, tanpa akun/password.
+   Memakai Firebase Anonymous Auth di baliknya, lalu menautkan
+   peserta ke batch yang SEDANG AKTIF saat itu.
+   ============================================================ */
+let sedangRegistrasiPeserta = false;
+
+async function cariBatchAktif() {
+  const snap = await getDocs(collection(db, "batches"));
+  const now = new Date();
+  let hasil = null;
+  snap.forEach(d => {
+    const b = d.data();
+    if (b.status === "aktif" && b.waktuMulai && b.waktuSelesai) {
+      const mulai = b.waktuMulai.toDate(), selesai = b.waktuSelesai.toDate();
+      if (now >= mulai && now <= selesai) hasil = { id: d.id, ...b };
+    }
+  });
+  return hasil;
+}
+
+$("btnMulaiPeserta").onclick = async () => {
+  const nama = $("inNamaPeserta").value.trim();
+  const instansi = $("inInstansiPeserta").value.trim();
+  $("pesertaLoginError").classList.add("hide");
+  if (!nama || !instansi) { errLoginPeserta("Isi nama lengkap dan instansi/perusahaan terlebih dahulu."); return; }
+
+  $("btnMulaiPeserta").disabled = true; $("btnMulaiPeserta").innerHTML = '<span class="spin"></span>';
+  sedangRegistrasiPeserta = true;
+  try {
+    let user = auth.currentUser;
+    if (!user) {
+      const cred = await signInAnonymously(auth);
+      user = cred.user;
+    }
+
+    const batchAktif = await cariBatchAktif();
+    if (!batchAktif) {
+      errLoginPeserta("Belum ada sesi asesmen yang sedang dibuka saat ini. Hubungi fasilitator Anda.");
+      sedangRegistrasiPeserta = false;
+      $("btnMulaiPeserta").disabled = false; $("btnMulaiPeserta").innerText = "Mulai Asesmen";
+      return;
+    }
+
+    const profRef = doc(db, "profiles", user.uid);
+    const profSnapLama = await getDoc(profRef);
+    const dataProfil = { nama, instansi, role: "peserta", batchId: batchAktif.id, aktif: true, updatedAt: Timestamp.now() };
+    if (!profSnapLama.exists()) dataProfil.createdAt = Timestamp.now();
+    await setDoc(profRef, dataProfil, { merge: true });
+
+    if (!profSnapLama.exists()) {
+      await setDoc(doc(db, "participantProgress", user.uid), {
+        batchId: batchAktif.id, status: "belum_mulai", jumlahJawab: 0, updatedAt: Timestamp.now(),
+      });
+    }
+
+    const profilBaru = (await getDoc(profRef)).data();
+    sedangRegistrasiPeserta = false;
+    $("layarLogin").classList.add("hide");
+    $("areaAdmin").classList.add("hide");
+    $("areaPeserta").classList.remove("hide");
+    await routerPeserta(user, profilBaru);
+  } catch (e) {
+    sedangRegistrasiPeserta = false;
+    errLoginPeserta("Gagal memulai asesmen: " + e.message + ". Periksa koneksi internet dan coba lagi.");
+  }
+  $("btnMulaiPeserta").disabled = false; $("btnMulaiPeserta").innerText = "Mulai Asesmen";
+};
+
+/* ============================================================
+   ROUTER UTAMA — cabang berdasarkan peran setelah login.
+   Dilewati sementara saat alur registrasi peserta sedang berjalan,
+   supaya tidak terjadi tabrakan status sebelum profil selesai ditulis.
    ============================================================ */
 onAuthStateChanged(auth, async (user) => {
+  if (sedangRegistrasiPeserta) return;
+
   $("btnLogin").disabled = false; $("btnLogin").innerText = "Masuk";
   $("areaPeserta").classList.add("hide");
   $("areaAdmin").classList.add("hide");
@@ -463,6 +565,9 @@ onAuthStateChanged(auth, async (user) => {
 
   const profSnap = await getDoc(doc(db, "profiles", user.uid));
   if (!profSnap.exists()) {
+    // Sesi anonim tanpa profil (mis. baru dibuat lalu dibatalkan) —
+    // kembalikan saja ke layar login peserta, tanpa pesan error yang menakuti.
+    if (user.isAnonymous) { $("layarLogin").classList.remove("hide"); return; }
     errLogin("Akun tidak ditemukan. Hubungi fasilitator.");
     $("layarLogin").classList.remove("hide");
     await signOut(auth);
@@ -839,9 +944,9 @@ function renderPesertaAdmin(progMap) {
   const STATUS = { belum_mulai: ["Belum mulai", "b-frz"], sedang_mengerjakan: ["Mengerjakan", "b-warn"], selesai: ["Selesai", "b-ok"] };
   $("tblPeserta").innerHTML = semuaPeserta.map(p => {
     const st = STATUS[progMap[p.id]?.status || "belum_mulai"];
-    return `<tr><td style="color:var(--ink);font-weight:600">${p.nama}</td><td>${namaBatchAdmin(p.batchId)}</td>
+    return `<tr><td style="color:var(--ink);font-weight:600">${p.nama}</td><td>${p.instansi || "-"}</td><td>${namaBatchAdmin(p.batchId)}</td>
       <td><span class="badge ${st[1]}"><span class="d"></span>${st[0]}</span></td></tr>`;
-  }).join("") || '<tr><td colspan="3" style="text-align:center;color:var(--ink-3);padding:30px">Belum ada peserta.</td></tr>';
+  }).join("") || '<tr><td colspan="4" style="text-align:center;color:var(--ink-3);padding:30px">Belum ada peserta.</td></tr>';
 }
 
 function isiSelectBatchAdmin() {
@@ -1072,7 +1177,7 @@ async function cetakLaporan(kunci) {
     <div class="bar"></div>
     <div class="eyebrow">Laporan Hasil Asesmen</div>
     <h1>C.A.P.S. Personal Style Inventory</h1>
-    <p style="font-size:12px;color:#7e8aa0">Nama: <b style="color:#141a22">${peserta.nama}</b> &nbsp; Batch: <b style="color:#141a22">${batch.nama}</b></p>
+    <p style="font-size:12px;color:#7e8aa0">Nama: <b style="color:#141a22">${peserta.nama}</b> &nbsp; Instansi: <b style="color:#141a22">${peserta.instansi || "-"}</b> &nbsp; Batch: <b style="color:#141a22">${batch.nama}</b></p>
     <div class="banner"><div class="eyebrow">Gaya Komunikasi</div><div class="typename">${r.tipe}</div><div style="font-size:12px;color:#4d5868">${k.posisi}</div></div>
     <p style="font-size:13px;color:#4d5868">${k.ringkas}</p>
     <div class="scorerow">
