@@ -1037,7 +1037,7 @@ async function cetakLaporan(kunci) {
     alert("Browser memblokir jendela pop-up. Izinkan pop-up untuk situs ini di pengaturan browser, lalu klik Cetak lagi.");
     return;
   }
-  w.document.write("<p style='font-family:sans-serif;padding:40px;color:#7e8aa0'>Menyiapkan laporan...</p>");
+  w.document.title = "Menyiapkan laporan...";
 
   const [pesertaId, batchId] = kunci.split("|");
   const resultSnap = await getDoc(doc(db, "results", `${pesertaId}_${batchId}`));
@@ -1045,8 +1045,7 @@ async function cetakLaporan(kunci) {
   const batch = semuaBatch.find(b => b.id === batchId);
   const r = resultSnap.data();
   const k = KONTEN[r.tipe];
-  w.document.open();
-  w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Laporan CAPS - ${peserta.nama}</title>
+  const htmlLaporan = `<!doctype html><html><head><meta charset="utf-8"><title>Laporan CAPS - ${peserta.nama}</title>
   <style>
     body{font-family:Helvetica,Arial,sans-serif;color:#141a22;padding:40px;max-width:720px;margin:0 auto}
     .halaman{page-break-after:always}
@@ -1114,8 +1113,15 @@ async function cetakLaporan(kunci) {
   </div>
 
   <div class="noprint" style="margin-top:8px;text-align:center"><button onclick="window.print()" style="padding:10px 18px;background:#096cbf;color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer">Cetak / Simpan sebagai PDF</button></div>
-  </body></html>`);
-  w.document.close();
+  </body></html>`;
+
+  // Navigasikan jendela ke berkas HTML sungguhan lewat Blob URL,
+  // bukan menulis langsung ke document lewat document.write.
+  // Cara ini menghindari kegagalan render yang bisa terjadi di Safari
+  // saat document.write dipanggil lebih dari sekali pada jendela yang sama.
+  const blob = new Blob([htmlLaporan], { type: "text/html;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  w.location.href = url;
 }
 </script>
 </body>
