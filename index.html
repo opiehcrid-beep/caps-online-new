@@ -184,7 +184,6 @@
       <p style="color:var(--ink-3);font-size:14.5px;line-height:1.6;margin:0 0 22px">
         Anda akan menjawab 18 pasang pernyataan. Pilih satu pernyataan yang paling menggambarkan diri Anda pada tiap nomor. Jawab secara spontan dan jujur.
       </p>
-      <div id="batchCard" class="card hide" style="margin-bottom:20px"></div>
       <div id="landingAksi"></div>
     </div></div>
   </main>
@@ -249,7 +248,6 @@
       </div>
       <button class="navBtn on" data-tab="tabDash">Dashboard</button>
       <button class="navBtn" data-tab="tabSetup">Setup Awal</button>
-      <button class="navBtn" data-tab="tabBatch">Batch</button>
       <button class="navBtn" data-tab="tabPeserta">Peserta</button>
       <button class="navBtn" data-tab="tabHasil">Hasil & Laporan</button>
       <div style="margin-top:auto;padding-top:16px;border-top:1px solid var(--border)">
@@ -264,10 +262,9 @@
         <h1 class="pageTitle">Ringkasan penyelenggaraan</h1>
         <div class="kpiGrid">
           <div class="kpi"><div class="kl">Total peserta</div><div class="kv" id="kpiPeserta">-</div></div>
-          <div class="kpi"><div class="kl">Total batch</div><div class="kv" id="kpiBatch">-</div></div>
           <div class="kpi"><div class="kl">Asesmen selesai</div><div class="kv" id="kpiSelesai">-</div></div>
         </div>
-        <p class="al-info alert">Gunakan menu di samping untuk mulai: Setup Awal (sekali saja) &rarr; Batch &rarr; Peserta &rarr; Hasil.</p>
+        <p class="al-info alert">Gunakan menu di samping untuk mulai: Setup Awal (sekali saja) &rarr; Peserta akan otomatis muncul begitu mereka mengisi nama &amp; instansi &rarr; Hasil.</p>
       </section>
 
       <section id="tabSetup" class="tabPane">
@@ -282,24 +279,13 @@
         <button id="btnSeed" class="btn btn-accent">Tanam 18 Soal</button>
       </section>
 
-      <section id="tabBatch" class="tabPane">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start">
-          <div><span class="subt">Batch</span><h1 class="pageTitle">Kelola batch asesmen</h1></div>
-          <button id="btnBukaBatch" class="btn btn-primary">+ Buat batch</button>
-        </div>
-        <div class="card" style="padding:0;overflow:auto">
-          <table><thead><tr><th>Nama</th><th>Dibuka</th><th>Ditutup</th><th>Status</th><th></th></tr></thead>
-          <tbody id="tblBatch"></tbody></table>
-        </div>
-      </section>
-
       <section id="tabPeserta" class="tabPane">
         <div style="display:flex;justify-content:space-between;align-items:flex-start">
           <div><span class="subt">Peserta</span><h1 class="pageTitle">Kelola akun peserta</h1></div>
           <button id="btnBukaPeserta" class="btn btn-primary">+ Tambah peserta</button>
         </div>
         <div class="card" style="padding:0;overflow:auto">
-          <table><thead><tr><th>Nama</th><th>Instansi</th><th>Batch</th><th>Status</th></tr></thead>
+          <table><thead><tr><th>Nama</th><th>Instansi</th><th>Status</th><th></th></tr></thead>
           <tbody id="tblPeserta"></tbody></table>
         </div>
       </section>
@@ -308,8 +294,8 @@
         <span class="subt">Hasil & Laporan</span>
         <h1 class="pageTitle">Hasil asesmen</h1>
         <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap">
-          <div class="field" style="max-width:320px;flex:1;min-width:220px"><label>Pilih batch</label>
-            <select id="selBatchHasil" class="inp"></select></div>
+          <div class="field" style="max-width:320px;flex:1;min-width:220px"><label>Pilih instansi/perusahaan</label>
+            <select id="selInstansiHasil" class="inp"></select></div>
           <button id="btnMuatUlangHasil" class="btn btn-ghost" style="margin-bottom:14px">Muat ulang</button>
         </div>
         <div class="card" style="padding:0;overflow:auto">
@@ -319,49 +305,6 @@
         <p id="waktuMuatHasil" style="font-size:11.5px;color:var(--ink-3);margin-top:8px"></p>
       </section>
     </main>
-  </div>
-
-  <!-- MODAL BATCH -->
-  <div id="modalBatch" class="modalBg hide">
-    <div class="modalBox">
-      <div class="modalHead"><h3 style="font-size:16px">Buat batch baru</h3><button class="btn btn-quiet sm" data-close>&times;</button></div>
-      <div class="modalBody">
-        <div id="batchModalMsg"></div>
-        <div class="field"><label>Nama batch</label><input id="bNama" class="inp" placeholder="Leadership Batch 1 - 2026"></div>
-        <div class="field"><label>Deskripsi (opsional)</label><input id="bDeskripsi" class="inp"></div>
-        <div style="display:flex;gap:12px">
-          <div class="field" style="flex:1"><label>Waktu mulai</label><input id="bMulai" class="inp" type="datetime-local"></div>
-          <div class="field" style="flex:1"><label>Waktu selesai</label><input id="bSelesai" class="inp" type="datetime-local"></div>
-        </div>
-        <label style="display:flex;gap:8px;align-items:center;font-size:13px;margin-bottom:16px">
-          <input id="bAktif" type="checkbox" checked style="width:16px;height:16px"> Aktifkan batch sekarang
-        </label>
-        <div style="display:flex;justify-content:flex-end;gap:8px">
-          <button class="btn btn-ghost" data-close>Batal</button>
-          <button id="btnSimpanBatch" class="btn btn-primary">Simpan batch</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL EDIT BATCH -->
-  <div id="modalEditBatch" class="modalBg hide">
-    <div class="modalBox">
-      <div class="modalHead"><h3 style="font-size:16px">Edit batch</h3><button class="btn btn-quiet sm" data-close>&times;</button></div>
-      <div class="modalBody">
-        <div id="editBatchMsg"></div>
-        <div class="field"><label>Nama batch</label><input id="ebNama" class="inp"></div>
-        <div class="field"><label>Deskripsi (opsional)</label><input id="ebDeskripsi" class="inp"></div>
-        <div style="display:flex;gap:12px">
-          <div class="field" style="flex:1"><label>Waktu mulai</label><input id="ebMulai" class="inp" type="datetime-local"></div>
-          <div class="field" style="flex:1"><label>Waktu selesai</label><input id="ebSelesai" class="inp" type="datetime-local"></div>
-        </div>
-        <div style="display:flex;justify-content:flex-end;gap:8px">
-          <button class="btn btn-ghost" data-close>Batal</button>
-          <button id="btnSimpanEditBatch" class="btn btn-primary">Simpan perubahan</button>
-        </div>
-      </div>
-    </div>
   </div>
 
   <!-- MODAL PESERTA -->
@@ -374,18 +317,18 @@
           <button class="tabx" data-ptab="massal">Tempel massal</button>
         </div>
         <div id="pesertaModalMsg"></div>
-        <div class="field"><label>Tautkan ke batch</label><select id="pBatch" class="inp"></select></div>
         <div id="paneIndividu">
           <div class="field"><label>Nama lengkap</label><input id="pNama" class="inp"></div>
+          <div class="field"><label>Instansi/Perusahaan</label><input id="pInstansi" class="inp"></div>
           <div style="display:flex;gap:12px">
             <div class="field" style="flex:1"><label>Username</label><input id="pUsername" class="inp" placeholder="budi-01"></div>
             <div class="field" style="flex:1"><label>Password</label><input id="pPassword" class="inp" placeholder="min. 6 karakter"></div>
           </div>
         </div>
         <div id="paneMassal" class="hide">
-          <div class="field"><label>Tempel daftar (Nama, username, password per baris)</label>
-            <textarea id="pMassal" class="inp" rows="6" style="font-family:var(--font-n);font-size:12px" placeholder="Budi Santoso, budi-01, rahasia123
-Siti Aminah, siti-02, rahasia456"></textarea>
+          <div class="field"><label>Tempel daftar (Nama, instansi, username, password per baris)</label>
+            <textarea id="pMassal" class="inp" rows="6" style="font-family:var(--font-n);font-size:12px" placeholder="Budi Santoso, PT Sinergi Karya, budi-01, rahasia123
+Siti Aminah, PT Sinergi Karya, siti-02, rahasia456"></textarea>
           </div>
         </div>
         <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:10px">
@@ -434,7 +377,7 @@ import {
   getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword, signInAnonymously
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
 import {
-  getFirestore, doc, getDoc, setDoc, getDocs, addDoc, updateDoc, collection, query, where, Timestamp, writeBatch
+  getFirestore, doc, getDoc, setDoc, getDocs, updateDoc, deleteDoc, collection, query, where, Timestamp, writeBatch
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
 const app = initializeApp(firebaseConfig);
@@ -481,24 +424,10 @@ $("btnKeluarAdmin").onclick = () => signOut(auth);
 
 /* ============================================================
    REGISTRASI PESERTA — nama + instansi saja, tanpa akun/password.
-   Memakai Firebase Anonymous Auth di baliknya, lalu menautkan
-   peserta ke batch yang SEDANG AKTIF saat itu.
+   Memakai Firebase Anonymous Auth di baliknya. Tidak ada konsep
+   batch/jadwal lagi — asesmen selalu terbuka begitu soal ditanam.
    ============================================================ */
 let sedangRegistrasiPeserta = false;
-
-async function cariBatchAktif() {
-  const snap = await getDocs(collection(db, "batches"));
-  const now = new Date();
-  let hasil = null;
-  snap.forEach(d => {
-    const b = d.data();
-    if (b.status === "aktif" && b.waktuMulai && b.waktuSelesai) {
-      const mulai = b.waktuMulai.toDate(), selesai = b.waktuSelesai.toDate();
-      if (now >= mulai && now <= selesai) hasil = { id: d.id, ...b };
-    }
-  });
-  return hasil;
-}
 
 $("btnMulaiPeserta").onclick = async () => {
   const nama = $("inNamaPeserta").value.trim();
@@ -515,23 +444,15 @@ $("btnMulaiPeserta").onclick = async () => {
       user = cred.user;
     }
 
-    const batchAktif = await cariBatchAktif();
-    if (!batchAktif) {
-      errLoginPeserta("Belum ada sesi asesmen yang sedang dibuka saat ini. Hubungi fasilitator Anda.");
-      sedangRegistrasiPeserta = false;
-      $("btnMulaiPeserta").disabled = false; $("btnMulaiPeserta").innerText = "Mulai Asesmen";
-      return;
-    }
-
     const profRef = doc(db, "profiles", user.uid);
     const profSnapLama = await getDoc(profRef);
-    const dataProfil = { nama, instansi, role: "peserta", batchId: batchAktif.id, aktif: true, updatedAt: Timestamp.now() };
+    const dataProfil = { nama, instansi, role: "peserta", aktif: true, updatedAt: Timestamp.now() };
     if (!profSnapLama.exists()) dataProfil.createdAt = Timestamp.now();
     await setDoc(profRef, dataProfil, { merge: true });
 
     if (!profSnapLama.exists()) {
       await setDoc(doc(db, "participantProgress", user.uid), {
-        batchId: batchAktif.id, status: "belum_mulai", jumlahJawab: 0, updatedAt: Timestamp.now(),
+        status: "belum_mulai", jumlahJawab: 0, updatedAt: Timestamp.now(),
       });
     }
 
@@ -588,16 +509,11 @@ onAuthStateChanged(auth, async (user) => {
 /* ============================================================
    AREA PESERTA
    ============================================================ */
-let profilSaya = null, batchSaya = null, soalList = [], jawabanSaya = {}, idxSekarang = 0;
+let profilSaya = null, soalList = [], jawabanSaya = {}, idxSekarang = 0;
 
 async function routerPeserta(user, profil) {
   profilSaya = profil;
   $("sapaan").innerText = "Halo, " + (profil.nama || "Peserta");
-
-  if (!profil.batchId) { renderLandingTanpaBatch(); tampilkan("layarLanding"); return; }
-
-  const batchSnap = await getDoc(doc(db, "batches", profil.batchId));
-  batchSaya = batchSnap.exists() ? batchSnap.data() : null;
 
   const progSnap = await getDoc(doc(db, "participantProgress", user.uid));
   const sudahSelesai = progSnap.exists() && progSnap.data().status === "selesai";
@@ -608,52 +524,9 @@ async function routerPeserta(user, profil) {
   tampilkan("layarLanding");
 }
 
-function fmtWaktu(ts) {
-  if (!ts) return "-";
-  const d = ts.toDate ? ts.toDate() : new Date(ts);
-  return d.toLocaleString("id-ID", { dateStyle: "full", timeStyle: "short" });
-}
-
-function renderLandingTanpaBatch() {
-  $("batchCard").classList.add("hide");
-  $("landingAksi").innerHTML = '<div class="alert al-warn">Anda belum ditautkan ke batch mana pun. Hubungi fasilitator penyelenggara.</div>';
-}
-
 function renderLanding(jumlahJawab) {
-  if (!batchSaya) { renderLandingTanpaBatch(); return; }
-  const now = new Date();
-  const mulai = batchSaya.waktuMulai.toDate();
-  const selesai = batchSaya.waktuSelesai.toDate();
-  const aktif = batchSaya.status === "aktif" && now >= mulai && now <= selesai;
-  const belumBuka = now < mulai;
-  const sudahTutup = (now > selesai) || batchSaya.status === "ditutup";
-
-  let badge = '<span class="chip" style="color:#1f9d57;background:var(--success-tint);border-color:#bce6cd">● Sedang dibuka</span>';
-  if (belumBuka) badge = '<span class="chip" style="color:var(--primary);background:var(--primary-tint);border-color:var(--primary-tint-2)">● Belum dibuka</span>';
-  if (sudahTutup) badge = '<span class="chip">● Ditutup</span>';
-
-  $("batchCard").classList.remove("hide");
-  $("batchCard").innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:flex-start">
-      <div>
-        <div style="font-family:var(--font-d);font-weight:700;font-size:16px">${batchSaya.nama}</div>
-        ${batchSaya.deskripsi ? `<div style="color:var(--ink-3);font-size:13px;margin-top:2px">${batchSaya.deskripsi}</div>` : ""}
-      </div>${badge}
-    </div>
-    <div style="height:1px;background:var(--border);margin:14px 0"></div>
-    <div style="display:flex;gap:24px;font-size:13px">
-      <div><span style="color:var(--ink-3)">Dibuka</span><br><span style="font-family:var(--font-n)">${fmtWaktu(batchSaya.waktuMulai)}</span></div>
-      <div><span style="color:var(--ink-3)">Ditutup</span><br><span style="font-family:var(--font-n)">${fmtWaktu(batchSaya.waktuSelesai)}</span></div>
-    </div>`;
-
-  if (aktif) {
-    $("landingAksi").innerHTML = `<button id="btnMulai" class="btn btn-accent">${jumlahJawab > 0 ? "Lanjutkan asesmen" : "Mulai asesmen"}</button>`;
-    $("btnMulai").onclick = mulaiKuis;
-  } else if (belumBuka) {
-    $("landingAksi").innerHTML = '<div class="alert al-info">Sesi belum dibuka. Silakan kembali pada waktu yang dijadwalkan.</div>';
-  } else {
-    $("landingAksi").innerHTML = '<div class="alert al-warn">Sesi telah ditutup. Hubungi fasilitator bila Anda belum sempat mengerjakan.</div>';
-  }
+  $("landingAksi").innerHTML = `<button id="btnMulai" class="btn btn-accent">${jumlahJawab > 0 ? "Lanjutkan asesmen" : "Mulai asesmen"}</button>`;
+  $("btnMulai").onclick = mulaiKuis;
 }
 
 async function mulaiKuis() {
@@ -715,11 +588,11 @@ async function pilihJawaban(pilihan) {
   $("indikatorSimpan").classList.remove("hide");
   const uid = auth.currentUser.uid;
   await setDoc(doc(db, "responses", `${uid}_${s.id}`), {
-    pesertaId: uid, batchId: profilSaya.batchId, nomorSoal: s.id, pilihan,
+    pesertaId: uid, nomorSoal: s.id, pilihan,
     updatedAt: Timestamp.now(),
   });
   await setDoc(doc(db, "participantProgress", uid), {
-    batchId: profilSaya.batchId, status: "sedang_mengerjakan",
+    status: "sedang_mengerjakan",
     jumlahJawab: Object.keys(jawabanSaya).length, updatedAt: Timestamp.now(),
   }, { merge: true });
   $("indikatorSimpan").classList.add("hide");
@@ -743,7 +616,7 @@ $("btnKirim").onclick = async () => {
   const uid = auth.currentUser.uid;
   try {
     await setDoc(doc(db, "participantProgress", uid), {
-      batchId: profilSaya.batchId, status: "selesai",
+      status: "selesai",
       jumlahJawab: soalList.length, updatedAt: Timestamp.now(),
     }, { merge: true });
     // Verifikasi tersimpan sebelum menampilkan layar terima kasih,
@@ -853,125 +726,54 @@ $("btnSeed").onclick = async () => {
   $("btnSeed").disabled = false; $("btnSeed").innerText = "Tanam 18 Soal";
 };
 
-let semuaBatch = [], semuaPeserta = [];
+let semuaPeserta = [];
 
 async function muatSemuaAdmin() {
-  const [batchSnap, pesertaSnap, progSnap, resultSnap] = await Promise.all([
-    getDocs(collection(db, "batches")),
+  const [pesertaSnap, progSnap, resultSnap] = await Promise.all([
     getDocs(query(collection(db, "profiles"), where("role", "==", "peserta"))),
     getDocs(collection(db, "participantProgress")),
     getDocs(collection(db, "results")),
   ]);
-  semuaBatch = []; batchSnap.forEach(d => semuaBatch.push({ id: d.id, ...d.data() }));
   semuaPeserta = []; pesertaSnap.forEach(d => semuaPeserta.push({ id: d.id, ...d.data() }));
   const progMap = {}; progSnap.forEach(d => progMap[d.id] = d.data());
   const resultMap = {}; resultSnap.forEach(d => resultMap[d.id] = { id: d.id, ...d.data() });
 
   $("kpiPeserta").innerText = semuaPeserta.length;
-  $("kpiBatch").innerText = semuaBatch.length;
   $("kpiSelesai").innerText = resultSnap.size;
 
-  renderBatchAdmin();
   renderPesertaAdmin(progMap);
-  isiSelectBatchAdmin();
+  isiSelectInstansiAdmin();
   renderHasilAdmin(progMap, resultMap);
 }
-
-function fmtWaktuAdmin(ts) {
-  if (!ts) return "-";
-  const d = ts.toDate ? ts.toDate() : new Date(ts);
-  return d.toLocaleString("id-ID", { dateStyle: "medium", timeStyle: "short" });
-}
-function namaBatchAdmin(id) { const b = semuaBatch.find(x => x.id === id); return b ? b.nama : "-"; }
-
-function renderBatchAdmin() {
-  const now = new Date();
-  $("tblBatch").innerHTML = semuaBatch.map(b => {
-    const mulai = b.waktuMulai.toDate(), selesai = b.waktuSelesai.toDate();
-    let badge = '<span class="badge b-frz"><span class="d"></span>Draft</span>';
-    if (b.status === "aktif") {
-      if (now < mulai) badge = '<span class="badge b-info"><span class="d"></span>Terjadwal</span>';
-      else if (now > selesai) badge = '<span class="badge b-warn"><span class="d"></span>Selesai</span>';
-      else badge = '<span class="badge b-ok"><span class="d"></span>Aktif</span>';
-    } else if (b.status === "ditutup") badge = '<span class="badge b-frz"><span class="d"></span>Ditutup</span>';
-    return `<tr><td style="color:var(--ink);font-weight:600">${b.nama}</td>
-      <td>${fmtWaktuAdmin(b.waktuMulai)}</td><td>${fmtWaktuAdmin(b.waktuSelesai)}</td><td>${badge}</td>
-      <td style="text-align:right"><button class="btn btn-ghost sm" data-editbatch="${b.id}">Edit</button> <button class="btn btn-ghost sm" data-toggle="${b.id}">${b.status === "aktif" ? "Nonaktifkan" : "Aktifkan"}</button></td></tr>`;
-  }).join("") || '<tr><td colspan="5" style="text-align:center;color:var(--ink-3);padding:30px">Belum ada batch.</td></tr>';
-
-  document.querySelectorAll("[data-toggle]").forEach(btn => btn.onclick = async () => {
-    const b = semuaBatch.find(x => x.id === btn.dataset.toggle);
-    await updateDoc(doc(db, "batches", b.id), { status: b.status === "aktif" ? "ditutup" : "aktif" });
-    muatSemuaAdmin();
-  });
-  document.querySelectorAll("[data-editbatch]").forEach(btn => btn.onclick = () => bukaModalEditBatch(btn.dataset.editbatch));
-}
-
-function toLocalInput(ts) {
-  const d = ts.toDate ? ts.toDate() : new Date(ts);
-  const off = d.getTimezoneOffset();
-  const local = new Date(d.getTime() - off * 60000);
-  return local.toISOString().slice(0, 16);
-}
-
-let editBatchIdAktif = null;
-function bukaModalEditBatch(batchId) {
-  const b = semuaBatch.find(x => x.id === batchId);
-  editBatchIdAktif = batchId;
-  $("ebNama").value = b.nama;
-  $("ebDeskripsi").value = b.deskripsi || "";
-  $("ebMulai").value = toLocalInput(b.waktuMulai);
-  $("ebSelesai").value = toLocalInput(b.waktuSelesai);
-  $("editBatchMsg").innerHTML = "";
-  $("modalEditBatch").classList.remove("hide");
-}
-
-$("btnSimpanEditBatch").onclick = async () => {
-  const nama = $("ebNama").value.trim(), mulai = $("ebMulai").value, selesai = $("ebSelesai").value;
-  if (!nama || !mulai || !selesai) { $("editBatchMsg").innerHTML = '<div class="alert al-dng">Lengkapi nama, waktu mulai, dan waktu selesai.</div>'; return; }
-  if (new Date(selesai) <= new Date(mulai)) { $("editBatchMsg").innerHTML = '<div class="alert al-dng">Waktu selesai harus setelah waktu mulai.</div>'; return; }
-  $("btnSimpanEditBatch").disabled = true;
-  await updateDoc(doc(db, "batches", editBatchIdAktif), {
-    nama, deskripsi: $("ebDeskripsi").value.trim() || null,
-    waktuMulai: Timestamp.fromDate(new Date(mulai)), waktuSelesai: Timestamp.fromDate(new Date(selesai)),
-  });
-  $("btnSimpanEditBatch").disabled = false;
-  $("modalEditBatch").classList.add("hide");
-  muatSemuaAdmin();
-};
 
 function renderPesertaAdmin(progMap) {
   const STATUS = { belum_mulai: ["Belum mulai", "b-frz"], sedang_mengerjakan: ["Mengerjakan", "b-warn"], selesai: ["Selesai", "b-ok"] };
   $("tblPeserta").innerHTML = semuaPeserta.map(p => {
-    const st = STATUS[progMap[p.id]?.status || "belum_mulai"];
-    return `<tr><td style="color:var(--ink);font-weight:600">${p.nama}</td><td>${p.instansi || "-"}</td><td>${namaBatchAdmin(p.batchId)}</td>
-      <td><span class="badge ${st[1]}"><span class="d"></span>${st[0]}</span></td></tr>`;
+    const status = progMap[p.id]?.status || "belum_mulai";
+    const st = STATUS[status];
+    const aksi = status !== "selesai" ? `<button class="btn btn-ghost sm" data-hapuspeserta="${p.id}" title="Hapus peserta">&times;</button>` : "";
+    return `<tr><td style="color:var(--ink);font-weight:600">${p.nama}</td><td>${p.instansi || "-"}</td>
+      <td><span class="badge ${st[1]}"><span class="d"></span>${st[0]}</span></td><td style="text-align:right">${aksi}</td></tr>`;
   }).join("") || '<tr><td colspan="4" style="text-align:center;color:var(--ink-3);padding:30px">Belum ada peserta.</td></tr>';
+
+  document.querySelectorAll("[data-hapuspeserta]").forEach(btn => btn.onclick = () => hapusPeserta(btn.dataset.hapuspeserta));
 }
 
-function isiSelectBatchAdmin() {
-  const opsi = semuaBatch.map(b => `<option value="${b.id}">${b.nama}</option>`).join("");
-  $("pBatch").innerHTML = `<option value="">Pilih batch</option>${opsi}`;
-  $("selBatchHasil").innerHTML = opsi || '<option value="">Belum ada batch</option>';
-}
-
-$("btnBukaBatch").onclick = () => $("modalBatch").classList.remove("hide");
-$("btnSimpanBatch").onclick = async () => {
-  const nama = $("bNama").value.trim(), mulai = $("bMulai").value, selesai = $("bSelesai").value;
-  if (!nama || !mulai || !selesai) { $("batchModalMsg").innerHTML = '<div class="alert al-dng">Lengkapi nama, waktu mulai, dan waktu selesai.</div>'; return; }
-  if (new Date(selesai) <= new Date(mulai)) { $("batchModalMsg").innerHTML = '<div class="alert al-dng">Waktu selesai harus setelah waktu mulai.</div>'; return; }
-  $("btnSimpanBatch").disabled = true;
-  await addDoc(collection(db, "batches"), {
-    nama, deskripsi: $("bDeskripsi").value.trim() || null,
-    waktuMulai: Timestamp.fromDate(new Date(mulai)), waktuSelesai: Timestamp.fromDate(new Date(selesai)),
-    status: $("bAktif").checked ? "aktif" : "draft", dibuatOleh: auth.currentUser.uid, createdAt: Timestamp.now(),
-  });
-  $("btnSimpanBatch").disabled = false;
-  $("modalBatch").classList.add("hide");
-  $("bNama").value = ""; $("bDeskripsi").value = ""; $("bMulai").value = ""; $("bSelesai").value = "";
-  $("batchModalMsg").innerHTML = "";
+async function hapusPeserta(uid) {
+  const p = semuaPeserta.find(x => x.id === uid);
+  if (!confirm(`Hapus peserta "${p ? p.nama : uid}"? Tindakan ini tidak bisa dibatalkan.`)) return;
+  const respSnap = await getDocs(query(collection(db, "responses"), where("pesertaId", "==", uid)));
+  await Promise.all(respSnap.docs.map(d => deleteDoc(d.ref)));
+  await deleteDoc(doc(db, "participantProgress", uid)).catch(() => {});
+  await deleteDoc(doc(db, "profiles", uid));
   muatSemuaAdmin();
-};
+}
+
+function isiSelectInstansiAdmin() {
+  const daftarInstansi = [...new Set(semuaPeserta.map(p => p.instansi).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+  const opsi = daftarInstansi.map(i => `<option value="${i}">${i}</option>`).join("");
+  $("selInstansiHasil").innerHTML = `<option value="">Semua instansi</option>${opsi}`;
+}
 
 document.querySelectorAll("[data-ptab]").forEach(btn => btn.onclick = () => {
   document.querySelectorAll("[data-ptab]").forEach(b => b.classList.remove("on"));
@@ -981,7 +783,7 @@ document.querySelectorAll("[data-ptab]").forEach(btn => btn.onclick = () => {
 });
 $("btnBukaPeserta").onclick = () => $("modalPeserta").classList.remove("hide");
 
-async function buatSatuAkun(nama, username, password, batchId) {
+async function buatSatuAkun(nama, instansi, username, password) {
   const namaApp = "secondary-" + Date.now() + Math.random();
   const secondaryApp = initializeApp(firebaseConfig, namaApp);
   const secondaryAuth = getAuth(secondaryApp);
@@ -989,8 +791,8 @@ async function buatSatuAkun(nama, username, password, batchId) {
     const cred = await createUserWithEmailAndPassword(secondaryAuth, username.trim().toLowerCase() + DOMAIN_PESERTA, password);
     const uid = cred.user.uid;
     await signOut(secondaryAuth);
-    await setDoc(doc(db, "profiles", uid), { nama, role: "peserta", batchId, aktif: true, createdAt: Timestamp.now() });
-    await setDoc(doc(db, "participantProgress", uid), { batchId, status: "belum_mulai", jumlahJawab: 0, updatedAt: Timestamp.now() });
+    await setDoc(doc(db, "profiles", uid), { nama, instansi, role: "peserta", aktif: true, createdAt: Timestamp.now() });
+    await setDoc(doc(db, "participantProgress", uid), { status: "belum_mulai", jumlahJawab: 0, updatedAt: Timestamp.now() });
     return { ok: true };
   } catch (e) {
     return { ok: false, pesan: e.code === "auth/email-already-in-use" ? "Username sudah dipakai." : e.message };
@@ -1000,18 +802,16 @@ async function buatSatuAkun(nama, username, password, batchId) {
 }
 
 $("btnSimpanPeserta").onclick = async () => {
-  const batchId = $("pBatch").value;
-  if (!batchId) { $("pesertaModalMsg").innerHTML = '<div class="alert al-dng">Pilih batch dulu.</div>'; return; }
   const modeIndividu = !$("paneIndividu").classList.contains("hide");
   let daftar = [];
   if (modeIndividu) {
-    const nama = $("pNama").value.trim(), username = $("pUsername").value.trim(), password = $("pPassword").value;
-    if (!nama || !username || !password) { $("pesertaModalMsg").innerHTML = '<div class="alert al-dng">Lengkapi semua kolom.</div>'; return; }
-    daftar = [{ nama, username, password }];
+    const nama = $("pNama").value.trim(), instansi = $("pInstansi").value.trim(), username = $("pUsername").value.trim(), password = $("pPassword").value;
+    if (!nama || !instansi || !username || !password) { $("pesertaModalMsg").innerHTML = '<div class="alert al-dng">Lengkapi semua kolom.</div>'; return; }
+    daftar = [{ nama, instansi, username, password }];
   } else {
     daftar = $("pMassal").value.split("\n").map(l => l.trim()).filter(Boolean).map(l => {
-      const [nama, username, password] = l.split(",").map(s => s.trim());
-      return { nama, username, password };
+      const [nama, instansi, username, password] = l.split(",").map(s => s.trim());
+      return { nama, instansi, username, password };
     });
   }
   if (daftar.length === 0) { $("pesertaModalMsg").innerHTML = '<div class="alert al-dng">Tidak ada data untuk disimpan.</div>'; return; }
@@ -1019,8 +819,8 @@ $("btnSimpanPeserta").onclick = async () => {
   $("btnSimpanPeserta").disabled = true; $("btnSimpanPeserta").innerHTML = '<span class="spin"></span>';
   let berhasil = 0; const gagal = [];
   for (const d of daftar) {
-    if (!d.nama || !d.username || !d.password) { gagal.push(`${d.username || "?"}: data tidak lengkap`); continue; }
-    const r = await buatSatuAkun(d.nama, d.username, d.password, batchId);
+    if (!d.nama || !d.instansi || !d.username || !d.password) { gagal.push(`${d.username || "?"}: data tidak lengkap`); continue; }
+    const r = await buatSatuAkun(d.nama, d.instansi, d.username, d.password);
     if (r.ok) berhasil++; else gagal.push(`${d.username}: ${r.pesan}`);
   }
   $("btnSimpanPeserta").disabled = false; $("btnSimpanPeserta").innerText = "Buat akun";
@@ -1029,7 +829,7 @@ $("btnSimpanPeserta").onclick = async () => {
     ${gagal.length ? "<br>Gagal: " + gagal.join(", ") : ""}
   </div>`;
   if (gagal.length === 0) {
-    setTimeout(() => { $("modalPeserta").classList.add("hide"); $("pesertaModalMsg").innerHTML = ""; $("pNama").value = ""; $("pUsername").value = ""; $("pPassword").value = ""; $("pMassal").value = ""; muatSemuaAdmin(); }, 900);
+    setTimeout(() => { $("modalPeserta").classList.add("hide"); $("pesertaModalMsg").innerHTML = ""; $("pNama").value = ""; $("pInstansi").value = ""; $("pUsername").value = ""; $("pPassword").value = ""; $("pMassal").value = ""; muatSemuaAdmin(); }, 900);
   } else { muatSemuaAdmin(); }
 };
 
@@ -1059,17 +859,17 @@ function hitungSkor(jawaban, answerKey) {
   return { totals, tipe: garisBatas ? "Garis_Batas" : combo[resp + aser], tipeTerdekat: combo[resp + aser], garisBatas, catatan };
 }
 
-$("selBatchHasil").onchange = () => muatSemuaAdmin();
+$("selInstansiHasil").onchange = () => muatSemuaAdmin();
 $("btnMuatUlangHasil").onclick = () => muatSemuaAdmin();
 
 async function renderHasilAdmin(progMap, resultMap) {
   $("waktuMuatHasil").innerText = "Terakhir dimuat: " + new Date().toLocaleTimeString("id-ID");
-  const batchId = $("selBatchHasil").value || (semuaBatch[0] && semuaBatch[0].id);
-  const pesertaBatch = semuaPeserta.filter(p => p.batchId === batchId);
+  const instansiTerpilih = $("selInstansiHasil").value;
+  const pesertaTersaring = instansiTerpilih ? semuaPeserta.filter(p => p.instansi === instansiTerpilih) : semuaPeserta;
   const rows = [];
-  for (const p of pesertaBatch) {
+  for (const p of pesertaTersaring) {
     const prog = progMap[p.id] || {};
-    const result = resultMap[`${p.id}_${batchId}`];
+    const result = resultMap[p.id];
     rows.push({ p, prog, result });
   }
   $("tblHasil").innerHTML = rows.map(({ p, prog, result }) => {
@@ -1081,17 +881,17 @@ async function renderHasilAdmin(progMap, resultMap) {
     if (result) {
       if (result.garisBatas) {
         tipeCell = `<span class="badge b-warn"><span class="d"></span>Garis batas (${result.catatanBatas})</span>`;
-        aksiCell = `<button class="btn btn-accent sm" data-batas="${p.id}|${batchId}">Tetapkan tipe</button>`;
+        aksiCell = `<button class="btn btn-accent sm" data-batas="${p.id}">Tetapkan tipe</button>`;
       } else {
         tipeCell = `<span class="badge ${TIPE_WARNA[result.tipe] || "b-frz"}"><span class="d"></span>${result.tipe}</span>`;
         laporanCell = result.dirilis ? '<span class="badge b-ok"><span class="d"></span>Dirilis</span>' : '<span class="badge b-frz"><span class="d"></span>Belum</span>';
-        aksiCell = `<button class="btn btn-ghost sm" data-cetak="${p.id}|${batchId}">Cetak</button> <button class="btn btn-primary sm" data-rilis="${p.id}|${batchId}|${!result.dirilis}">${result.dirilis ? "Tarik" : "Rilis"}</button>`;
+        aksiCell = `<button class="btn btn-ghost sm" data-cetak="${p.id}">Cetak</button> <button class="btn btn-primary sm" data-rilis="${p.id}|${!result.dirilis}">${result.dirilis ? "Tarik" : "Rilis"}</button>`;
       }
     } else if (prog.status === "selesai") {
-      aksiCell = `<button class="btn btn-primary sm" data-hitung="${p.id}|${batchId}">Hitung Skor</button>`;
+      aksiCell = `<button class="btn btn-primary sm" data-hitung="${p.id}">Hitung Skor</button>`;
     }
-    return `<tr><td style="color:var(--ink);font-weight:600">${p.nama}</td><td class="mono">${jumlah}/18</td><td>${tipeCell}</td><td>${laporanCell}</td><td style="text-align:right">${aksiCell}</td></tr>`;
-  }).join("") || '<tr><td colspan="5" style="text-align:center;color:var(--ink-3);padding:30px">Belum ada peserta di batch ini.</td></tr>';
+    return `<tr><td style="color:var(--ink);font-weight:600">${p.nama}</td><td>${p.instansi || "-"}</td><td class="mono">${jumlah}/18</td><td>${tipeCell}</td><td>${laporanCell}</td><td style="text-align:right">${aksiCell}</td></tr>`;
+  }).join("") || '<tr><td colspan="6" style="text-align:center;color:var(--ink-3);padding:30px">Belum ada peserta.</td></tr>';
 
   document.querySelectorAll("[data-hitung]").forEach(btn => btn.onclick = () => hitungDanSimpan(btn.dataset.hitung));
   document.querySelectorAll("[data-rilis]").forEach(btn => btn.onclick = () => toggleRilis(btn.dataset.rilis));
@@ -1099,37 +899,35 @@ async function renderHasilAdmin(progMap, resultMap) {
   document.querySelectorAll("[data-cetak]").forEach(btn => btn.onclick = () => cetakLaporan(btn.dataset.cetak));
 }
 
-async function hitungDanSimpan(kunci) {
-  const [pesertaId, batchId] = kunci.split("|");
+async function hitungDanSimpan(pesertaId) {
   const answerKey = await ambilAnswerKey();
-  const respSnap = await getDocs(query(collection(db, "responses"), where("pesertaId", "==", pesertaId), where("batchId", "==", batchId)));
+  const respSnap = await getDocs(query(collection(db, "responses"), where("pesertaId", "==", pesertaId)));
   const jawaban = {};
   respSnap.forEach(d => { const x = d.data(); jawaban[x.nomorSoal] = x.pilihan; });
   if (Object.keys(jawaban).length !== 18) { alert("Jawaban belum lengkap."); return; }
   const hasil = hitungSkor(jawaban, answerKey);
-  await setDoc(doc(db, "results", `${pesertaId}_${batchId}`), {
-    pesertaId, batchId, totalO: hasil.totals.O, totalG: hasil.totals.G, totalD: hasil.totals.D, totalI: hasil.totals.I,
+  await setDoc(doc(db, "results", pesertaId), {
+    pesertaId, totalO: hasil.totals.O, totalG: hasil.totals.G, totalD: hasil.totals.D, totalI: hasil.totals.I,
     tipe: hasil.tipe, garisBatas: hasil.garisBatas, catatanBatas: hasil.catatan || null, dirilis: false, waktuSelesai: Timestamp.now(),
   });
   muatSemuaAdmin();
 }
 
 async function toggleRilis(kunci) {
-  const [pesertaId, batchId, nilai] = kunci.split("|");
-  await updateDoc(doc(db, "results", `${pesertaId}_${batchId}`), { dirilis: nilai === "true" });
+  const [pesertaId, nilai] = kunci.split("|");
+  await updateDoc(doc(db, "results", pesertaId), { dirilis: nilai === "true" });
   muatSemuaAdmin();
 }
 
-let batasKunciAktif = null;
-function bukaModalBatas(kunci) {
-  batasKunciAktif = kunci;
+let batasPesertaAktif = null;
+function bukaModalBatas(pesertaId) {
+  batasPesertaAktif = pesertaId;
   $("batasInfo").innerText = "Skor peserta ini seri pada salah satu sumbu. Pilih tipe final berdasarkan pertimbangan wawancara atau observasi.";
   $("selBatas").innerHTML = ["Promotor", "Controller", "Analyzer", "Supporter"].map(t => `<option value="${t}">${t}</option>`).join("");
   $("modalBatas").classList.remove("hide");
 }
 $("btnSimpanBatas").onclick = async () => {
-  const [pesertaId, batchId] = batasKunciAktif.split("|");
-  await updateDoc(doc(db, "results", `${pesertaId}_${batchId}`), { tipe: $("selBatas").value, garisBatas: false, catatanBatas: null });
+  await updateDoc(doc(db, "results", batasPesertaAktif), { tipe: $("selBatas").value, garisBatas: false, catatanBatas: null });
   $("modalBatas").classList.add("hide");
   muatSemuaAdmin();
 };
@@ -1144,10 +942,9 @@ async function cetakLaporan(kunci) {
   }
   w.document.title = "Menyiapkan laporan...";
 
-  const [pesertaId, batchId] = kunci.split("|");
-  const resultSnap = await getDoc(doc(db, "results", `${pesertaId}_${batchId}`));
+  const pesertaId = kunci;
+  const resultSnap = await getDoc(doc(db, "results", pesertaId));
   const peserta = semuaPeserta.find(p => p.id === pesertaId);
-  const batch = semuaBatch.find(b => b.id === batchId);
   const r = resultSnap.data();
   const k = KONTEN[r.tipe];
   const htmlLaporan = `<!doctype html><html><head><meta charset="utf-8"><title>Laporan CAPS - ${peserta.nama}</title>
@@ -1177,7 +974,7 @@ async function cetakLaporan(kunci) {
     <div class="bar"></div>
     <div class="eyebrow">Laporan Hasil Asesmen</div>
     <h1>C.A.P.S. Personal Style Inventory</h1>
-    <p style="font-size:12px;color:#7e8aa0">Nama: <b style="color:#141a22">${peserta.nama}</b> &nbsp; Instansi: <b style="color:#141a22">${peserta.instansi || "-"}</b> &nbsp; Batch: <b style="color:#141a22">${batch.nama}</b></p>
+    <p style="font-size:12px;color:#7e8aa0">Nama: <b style="color:#141a22">${peserta.nama}</b> &nbsp; Instansi: <b style="color:#141a22">${peserta.instansi || "-"}</b></p>
     <div class="banner"><div class="eyebrow">Gaya Komunikasi</div><div class="typename">${r.tipe}</div><div style="font-size:12px;color:#4d5868">${k.posisi}</div></div>
     <p style="font-size:13px;color:#4d5868">${k.ringkas}</p>
     <div class="scorerow">
