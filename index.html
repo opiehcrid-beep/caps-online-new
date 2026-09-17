@@ -299,7 +299,7 @@
           <button id="btnMuatUlangHasil" class="btn btn-ghost" style="margin-bottom:14px">Muat ulang</button>
         </div>
         <div class="card" style="padding:0;overflow:auto">
-          <table><thead><tr><th>Nama</th><th>Jawaban</th><th>Tipe</th><th>Laporan</th><th></th></tr></thead>
+          <table><thead><tr><th>Nama</th><th>Instansi</th><th>Jawaban</th><th>Tipe</th><th>Laporan</th><th></th></tr></thead>
           <tbody id="tblHasil"></tbody></table>
         </div>
         <p id="waktuMuatHasil" style="font-size:11.5px;color:var(--ink-3);margin-top:8px"></p>
@@ -770,9 +770,13 @@ async function hapusPeserta(uid) {
 }
 
 function isiSelectInstansiAdmin() {
+  const nilaiSebelumnya = $("selInstansiHasil").value;
   const daftarInstansi = [...new Set(semuaPeserta.map(p => p.instansi).filter(Boolean))].sort((a, b) => a.localeCompare(b));
   const opsi = daftarInstansi.map(i => `<option value="${i}">${i}</option>`).join("");
   $("selInstansiHasil").innerHTML = `<option value="">Semua instansi</option>${opsi}`;
+  // Pertahankan pilihan instansi yang sedang aktif, supaya tidak
+  // otomatis kembali ke "Semua instansi" tiap kali tabel dimuat ulang.
+  if (daftarInstansi.includes(nilaiSebelumnya)) $("selInstansiHasil").value = nilaiSebelumnya;
 }
 
 document.querySelectorAll("[data-ptab]").forEach(btn => btn.onclick = () => {
